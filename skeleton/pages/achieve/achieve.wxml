@@ -1,0 +1,63 @@
+<view class="page">
+  <view class="hero">
+    <text class="hero-emoji">🏅</text>
+    <view class="hero-text">
+      <text class="hero-title">收集与成就</text>
+      <text class="hero-desc">徽章墙 + 单词图鉴，看得见的成长</text>
+    </view>
+  </view>
+
+  <!-- Tab 切换 -->
+  <view class="tabs">
+    <view class="tab {{tab === 'badge' ? 'tab-on' : ''}}" data-tab="badge" bindtap="switchTab">🏅 成就徽章</view>
+    <view class="tab {{tab === 'book' ? 'tab-on' : ''}}" data-tab="book" bindtap="switchTab">📖 单词图鉴</view>
+  </view>
+
+  <!-- 徽章墙 -->
+  <block wx:if="{{tab === 'badge'}}">
+    <view class="progress-card">
+      <view class="progress-head">
+        <text class="progress-title">已解锁 {{badgeStat.earned}} / {{badgeStat.total}}</text>
+        <text class="progress-pct">{{badgeStat.total > 0 ? badgeStat.earned * 100 / badgeStat.total : 0}}%</text>
+      </view>
+      <view class="progress-track"><view class="progress-fill" style="width: {{badgeStat.total > 0 ? badgeStat.earned * 100 / badgeStat.total : 0}}%"></view></view>
+    </view>
+
+    <view class="badge-grid">
+      <view class="badge-item {{item.unlocked ? 'badge-on' : 'badge-off'}}" wx:for="{{badges}}" wx:key="id">
+        <text class="badge-icon">{{item.icon}}</text>
+        <text class="badge-name">{{item.name}}</text>
+        <text class="badge-desc">{{item.desc}}</text>
+        <text class="badge-status">{{item.unlocked ? '已解锁' : '未解锁'}}</text>
+        <block wx:if="{{!item.unlocked && item.progress}}">
+          <view class="badge-pbar"><view class="badge-pfill" style="width: {{item.progress.pct}}%"></view></view>
+          <text class="badge-pnum">{{item.progress.cur}}/{{item.progress.max}}</text>
+        </block>
+      </view>
+    </view>
+    <view class="hint">徽章条件基于本地真实数据，答对题、打卡、复习都能解锁</view>
+  </block>
+
+  <!-- 单词图鉴 -->
+  <block wx:else>
+    <view class="book-head">
+      <text class="book-title">已收录 {{collectedCount}} 词</text>
+      <input class="search" placeholder="搜索单词或释义" bindinput="onFilter" value="{{filter}}" />
+    </view>
+    <view class="empty" wx:if="{{collectedCount === 0}}">
+      <text class="empty-emoji">📖</text>
+      <text class="empty-text">图鉴还是空的</text>
+      <text class="empty-sub">去闯关答过的词会自动收录</text>
+    </view>
+    <view class="word-list" wx:else>
+      <view class="word-item" wx:for="{{shown}}" wx:key="w">
+        <view class="word-left">
+          <text class="word-name">{{item.w}}</text>
+          <text class="word-phonetic" wx:if="{{item.p}}">/{{item.p}}/</text>
+          <text class="word-mean">{{item.m}}</text>
+        </view>
+        <text class="word-count">×{{item.n}}</text>
+      </view>
+    </view>
+  </block>
+</view>
