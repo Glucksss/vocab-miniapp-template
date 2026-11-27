@@ -1,0 +1,95 @@
+.page { position: relative; box-sizing: border-box; min-height: 100vh; padding: 24rpx 28rpx 60rpx; overflow: hidden; }
+/* 底部 Boss 氛围装饰：一对眼睛 + 两颗獠牙 + 三颗星 + 暗地面，纯 CSS 不拦截点击 */
+.boss-deco { position: absolute; left: 0; right: 0; bottom: 0; height: 180rpx; z-index: 0; pointer-events: none; overflow: hidden; }
+.bd-ground { position: absolute; left: -10%; right: -10%; bottom: -120rpx; height: 200rpx; border-radius: 50% 50% 0 0; background: linear-gradient(180deg, rgba(229,84,122,.10), rgba(229,84,122,.20)); }
+.bd-eye { position: absolute; bottom: 52rpx; width: 54rpx; height: 38rpx; border-radius: 50%; background: rgba(229,84,122,.16); display: flex; align-items: center; justify-content: center; }
+.bd-eye-l { left: 16%; transform: rotate(-8deg); } .bd-eye-r { right: 16%; transform: rotate(8deg); }
+.bd-pupil { width: 18rpx; height: 18rpx; border-radius: 50%; background: rgba(229,84,122,.42); }
+.bd-fang { position: absolute; bottom: 26rpx; width: 0; height: 0; border-left: 12rpx solid transparent; border-right: 12rpx solid transparent; border-top: 30rpx solid rgba(229,84,122,.28); }
+.bd-fang-l { left: 30%; } .bd-fang-r { right: 30%; }
+.bd-star { position: absolute; color: #F4C4D1; text-shadow: 0 0 12rpx rgba(229,84,122,.4); }
+.bs-1 { left: 8%; bottom: 120rpx; font-size: 30rpx; } .bs-2 { right: 10%; bottom: 108rpx; font-size: 24rpx; } .bs-3 { left: 50%; bottom: 150rpx; font-size: 20rpx; opacity: .7; }
+/* 内容层压在装饰之上 */
+.topbar, .boss-banner, .question-card, .option-list, .answer-box, .letter-pool { position: relative; z-index: 1; }
+.topbar { display: flex; }
+.stat-box { flex: 1; margin-right: 14rpx; background: #FFF; border-radius: 20rpx; padding: 16rpx; display: flex; flex-direction: column; align-items: center; box-shadow: 0 6rpx 0 #E8B4C4, 0 10rpx 20rpx rgba(229,84,122,.18); }
+.stat-box:last-child { margin-right: 0; }
+.stat-label { font-size: 22rpx; color: #9A96B8; }
+.stat-val { margin-top: 6rpx; font-size: 32rpx; font-weight: 800; color: #E5547A; }
+.stat-val.kill { color: #E5547A; }
+.boss-banner { margin-top: 24rpx; background: linear-gradient(135deg, #F0658A, #E5547A); border-radius: 28rpx; padding: 28rpx; display: flex; flex-direction: column; align-items: center; color: #FFF; box-shadow: 0 8rpx 0 #C63759, 0 14rpx 28rpx rgba(198,55,89,.28); }
+.boss-emoji { font-size: 72rpx; }
+.boss-title { margin-top: 8rpx; font-size: 34rpx; font-weight: 800; }
+.boss-sub { margin-top: 6rpx; font-size: 22rpx; opacity: 0.9; }
+.question-card { margin-top: 28rpx; background: #FFF; border: 3rpx solid #FFD8E2; border-radius: 28rpx; padding: 36rpx 28rpx; display: flex; flex-direction: column; align-items: center; box-shadow: 0 8rpx 0 #E8A8BC, 0 14rpx 26rpx rgba(229,84,122,.18); }
+.q-label { font-size: 24rpx; color: #9A96B8; }
+.q-main { margin-top: 14rpx; font-size: 38rpx; font-weight: 800; color: #2B2456; text-align: center; line-height: 1.4; }
+.q-phonetic { margin-top: 8rpx; font-size: 24rpx; color: #E5547A; }
+/* A 排版：2 列技能盘，8 项变 4 行，一屏看全 */
+.option-list { margin-top: 24rpx; display: grid; grid-template-columns: 1fr 1fr; gap: 14rpx; }
+.option { background: #FFF; border: 3rpx solid #EDEAF8; border-radius: 20rpx; padding: 24rpx 14rpx; display: flex; align-items: center; gap: 10rpx; min-width: 0; box-shadow: 0 6rpx 0 #D6CDEE, 0 10rpx 20rpx rgba(107,91,168,.18); }
+.option:active { transform: translateY(3rpx); box-shadow: 0 3rpx 0 #D6CDEE, 0 5rpx 12rpx rgba(107,91,168,.18); }
+.opt-badge { width: 40rpx; height: 40rpx; flex-shrink: 0; border-radius: 12rpx; background: #FCE0E9; color: #E5547A; font-size: 24rpx; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+.opt-text { flex: 1; min-width: 0; font-size: 28rpx; font-weight: 700; color: #4B4480; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.opt-right { background: #D9F7E8; border-color: #38B6A0; box-shadow: 0 6rpx 0 #7FD9B4, 0 10rpx 20rpx rgba(56,182,160,.28); }
+.opt-wrong { background: #FFE9EE; border-color: #FF4D6D; box-shadow: 0 6rpx 0 #E85470, 0 10rpx 20rpx rgba(255,77,109,.3); }
+.opt-mark { margin-left: auto; font-size: 26rpx; font-weight: 800; }
+.opt-wrong .opt-text { color: #C4183C; }
+.opt-wrong .opt-badge { color: #C4183C; }
+.answer-box { position: relative; margin-top: 28rpx; min-height: 110rpx; background: #FFF; border: 4rpx dashed #F5B8C8; border-radius: 24rpx; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; padding: 14rpx; box-shadow: 0 8rpx 0 #E8A8BC, 0 14rpx 26rpx rgba(229,84,122,.18); }
+.answer-box.right { border-color: #38B6A0; background: #E8FAF5; box-shadow: 0 8rpx 0 #7FD9B4, 0 14rpx 26rpx rgba(56,182,160,.22); }
+.answer-box.wrong { border-color: #FF5C7A; background: #FFF0F3; box-shadow: 0 8rpx 0 #F093AB, 0 14rpx 26rpx rgba(255,92,122,.22); }
+.answer-slot { width: 68rpx; height: 84rpx; margin: 6rpx; border-radius: 14rpx; background: #FFE0E8; display: flex; align-items: center; justify-content: center; }
+.answer-ch { font-size: 38rpx; font-weight: 800; color: #E5547A; }
+.letter-pool { display: flex; flex-wrap: wrap; justify-content: center; margin-top: 28rpx; }
+.letter-btn { width: 92rpx; height: 92rpx; margin: 8rpx; border-radius: 18rpx; background: linear-gradient(135deg, #F0658A, #E5547A); display: flex; align-items: center; justify-content: center; box-shadow: 0 6rpx 0 #C63759, 0 10rpx 20rpx rgba(198,55,89,.3); }
+.letter-btn:active { transform: translateY(4rpx) scale(0.96); box-shadow: 0 2rpx 0 #C63759, 0 4rpx 10rpx rgba(198,55,89,.3); }
+.letter-used { background: #E3E0F0; box-shadow: none; }
+.letter-used .letter-ch { color: #B8B4CE; }
+.letter-ch { font-size: 40rpx; font-weight: 800; color: #FFF; }
+.overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(43,36,86,0.55); display: flex; align-items: center; justify-content: center; }
+.result-card { width: 600rpx; background: #FFF; border-radius: 36rpx; padding: 48rpx 40rpx; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10rpx 0 #E8A8BC, 0 18rpx 40rpx rgba(43,36,86,.28); }
+.result-emoji { font-size: 80rpx; }
+.result-title { margin-top: 12rpx; font-size: 38rpx; font-weight: 800; }
+.killed-num { margin-top: 24rpx; font-size: 88rpx; font-weight: 800; color: #E5547A; }
+.killed-label { font-size: 24rpx; color: #9A96B8; }
+.result-btn { width: 100%; margin-top: 36rpx; font-size: 30rpx; padding: 22rpx 0; }
+
+/* 星际词卡（复用打地鼠同款弹层） */
+.wc-open { margin: 6rpx; width: fit-content; max-width: 100%; text-align: center; font-size: 24rpx; font-weight: 700; color: #3D5A88; background: #FFFFFF; border: 2rpx solid #B9CDE8; border-radius: 999rpx; padding: 12rpx 28rpx; box-shadow: 0 5rpx 0 #D4E0F0; }
+/* 星际词卡弹层 */
+.wc-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 999; background: rgba(3,8,26,.82); display: flex; align-items: center; justify-content: center; padding: 30rpx; box-sizing: border-box; }
+.wc-card { position: relative; width: 100%; max-height: 88vh; overflow-y: auto; box-sizing: border-box; padding: 46rpx 32rpx 32rpx; border-radius: 42rpx; border: 5rpx solid #F0932B; background: radial-gradient(circle at 16% 12%, rgba(255,255,255,.9) 0 2rpx, transparent 3rpx), radial-gradient(circle at 82% 18%, rgba(255,255,255,.8) 0 2rpx, transparent 3rpx), radial-gradient(circle at 26% 56%, rgba(255,255,255,.7) 0 2rpx, transparent 3rpx), radial-gradient(circle at 76% 72%, rgba(255,255,255,.8) 0 2rpx, transparent 3rpx), linear-gradient(180deg, #162653 0%, #0C1638 100%); box-shadow: 0 20rpx 60rpx rgba(0,0,0,.6), inset 0 0 0 3rpx rgba(245,206,106,.18); }
+.wc-close { position: absolute; right: 24rpx; top: 20rpx; width: 52rpx; height: 52rpx; border-radius: 50%; background: rgba(255,255,255,.12); color: #DCE6FF; font-size: 28rpx; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.wc-planet { position: absolute; pointer-events: none; opacity: .9; }
+.wc-planet-a { left: -10rpx; top: 12rpx; font-size: 66rpx; transform: rotate(-18deg); }
+.wc-planet-b { right: 18rpx; top: 130rpx; font-size: 42rpx; }
+.wc-title { text-align: center; font-size: 28rpx; font-weight: 800; color: #F5CE6A; letter-spacing: 4rpx; }
+.wc-word { margin-top: 18rpx; text-align: center; font-size: 64rpx; font-weight: 900; color: #F5A73A; line-height: 1.1; word-break: break-word; text-shadow: 3rpx 3rpx 0 #8A4A12, 0 0 28rpx rgba(245,167,58,.35); }
+.wc-phonetic { margin-top: 12rpx; text-align: center; font-size: 28rpx; color: #CFE0FF; }
+.wc-section { margin-top: 26rpx; background: rgba(255,255,255,.07); border: 2rpx solid rgba(255,255,255,.16); border-radius: 24rpx; padding: 22rpx 24rpx; }
+.wc-section-title { font-size: 26rpx; font-weight: 800; color: #F5CE6A; margin-bottom: 14rpx; }
+.wc-cn { font-size: 27rpx; line-height: 1.6; color: #FFF3D0; font-weight: 700; }
+.wc-en { margin-top: 10rpx; font-size: 23rpx; line-height: 1.6; color: #C6CFEE; }
+.wc-coll { display: flex; align-items: flex-start; margin-bottom: 14rpx; }
+.wc-coll:last-child { margin-bottom: 0; }
+.wc-coll-i { font-size: 23rpx; font-weight: 800; color: #FFD98A; margin-right: 14rpx; padding-top: 4rpx; }
+.wc-coll-body { flex: 1; }
+.wc-coll-en { font-size: 25rpx; color: #FFF6E6; font-weight: 700; line-height: 1.4; }
+.wc-coll-cn { margin-top: 4rpx; font-size: 22rpx; color: #B8C4E8; }
+.wc-syns { display: flex; flex-wrap: wrap; }
+.wc-syn { font-size: 23rpx; color: #D9B8FF; background: rgba(176,107,224,.2); border: 2rpx solid rgba(176,107,224,.45); border-radius: 999rpx; padding: 8rpx 20rpx; margin: 6rpx; }
+.wc-source { margin-top: 18rpx; text-align: center; font-size: 18rpx; color: #8090BF; line-height: 1.5; }
+.wc-actions { display: flex; margin-top: 26rpx; }
+.wc-btn { flex: 1; margin: 0 8rpx; padding: 18rpx 10rpx; border: none; border-radius: 999rpx; font-size: 26rpx; font-weight: 800; color: #fff; background: linear-gradient(180deg, #FFB347, #F08A22); box-shadow: 0 6rpx 0 #B85E12; }
+.wc-btn.ghost { color: #F5CE6A; background: rgba(255,255,255,.1); box-shadow: 0 6rpx 0 rgba(0,0,0,.3); }
+.wc-btn::after { border: none; }
+.fb-actions { display: flex; align-items: center; justify-content: center; margin-top: 18rpx; flex-wrap: wrap; gap: 12rpx; }
+.fb-hint { font-size: 19rpx; color: #AAA6C2; }
+/* 拼写答案框右上角判定角标 */
+.answer-mark { position: absolute; right: 18rpx; top: -18rpx; width: 46rpx; height: 46rpx; border-radius: 50%; background: #38B6A0; color: #FFF; font-size: 30rpx; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: 0 4rpx 0 #2B8C7C; }
+.answer-mark-wrong { background: #FF4D6D; box-shadow: 0 4rpx 0 #D93A57; }
+/* 题库三选一：高考3500 / 真题高频 / 混合 */
+.bank-tabs { position: relative; z-index: 2; display: flex; gap: 10rpx; margin: 20rpx 0 4rpx; padding: 8rpx; background: rgba(255,255,255,.7); border-radius: 999rpx; box-shadow: 0 6rpx 0 #E4DCF7; }
+.bank-tab { flex: 1; text-align: center; padding: 14rpx 6rpx; border-radius: 999rpx; font-size: 23rpx; font-weight: 700; color: #7A76A0; }
+.bank-tab-on { background: linear-gradient(135deg, #7C8FE8, #5A6CD6); color: #FFF; box-shadow: 0 4rpx 0 #3E4BA0; }
