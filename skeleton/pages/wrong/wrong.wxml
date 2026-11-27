@@ -1,0 +1,92 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="hero">
+    <view class="deco-cross cross-a">✕</view>
+    <view class="deco-cross cross-b">✕</view>
+    <view class="deco-bang">!</view>
+    <text class="hero-emoji">📕</text>
+    <view class="hero-text">
+      <text class="hero-title">我的错词本</text>
+      <text class="hero-desc">答错的词都在这里，消灭它们</text>
+    </view>
+    <view class="count-badge">{{count}}</view>
+  </view>
+
+  <view class="stat-row">
+    <view class="stat-box"><text class="stat-label">待攻克</text><text class="stat-val">{{count}}</text></view>
+    <view class="stat-box"><text class="stat-label">高难词</text><text class="stat-val">{{hardCount}}</text></view>
+    <view class="stat-box"><text class="stat-label">错最多</text><text class="stat-val">{{maxWrong}}次</text></view>
+  </view>
+
+  <button class="btn-primary boss-entry" bindtap="startBoss" wx:if="{{count > 0}}">💥 错词清剿</button>
+
+  <view class="empty-tip" wx:if="{{count === 0}}">
+    <text class="empty-emoji">🎯</text>
+    <text class="empty-text">错词本是空的</text>
+    <text class="empty-sub">去闯关，答错的词会自动收进来</text>
+  </view>
+
+  <view class="word-list" wx:if="{{count > 0}}">
+    <view class="word-item" wx:for="{{words}}" wx:key="w">
+      <view class="word-main">
+        <view class="word-title-row">
+          <text class="word-name">{{item.w}}</text>
+          <text class="speak-btn" data-i="{{index}}" bindtap="speakOne">🔊</text>
+          <view class="wc-open wc-open-sm" data-w="{{item.w}}" bindtap="openWordCard">📖 词卡</view>
+        </view>
+        <text class="word-phonetic" wx:if="{{item.p}}">/{{item.p}}/</text>
+        <text class="word-mean">{{item.m}}</text>
+      </view>
+      <view class="word-side">
+        <text class="wrong-times">错{{item.n}}次</text>
+        <text class="remove-btn" data-w="{{item.w}}" bindtap="removeOne">✓ 已掌握</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 底部装饰：叉号 + 对勾 + 感叹号（错词本专属） -->
+  <view class="foot-deco wr-deco">
+    <text class="wr-cross wr-x1">✕</text>
+    <text class="wr-check">✓</text>
+    <text class="wr-cross wr-x2">✕</text>
+    <view class="wr-bang">!</view>
+  </view>
+
+  <!-- 星际词卡弹层：词条上点「词卡」进入，看完整释义/搭配/同义词 -->
+  <view class="wc-mask" wx:if="{{detailOpen}}" bindtap="closeWordCard">
+    <view class="wc-card" catchtap="noop">
+      <view class="wc-close" bindtap="closeWordCard">✕</view>
+      <view class="wc-planet wc-planet-a">🌟</view>
+      <view class="wc-planet wc-planet-b">✨</view>
+      <view class="wc-title">星际单词探险</view>
+      <view class="wc-word">{{detail.w}}</view>
+      <view class="wc-phonetic" wx:if="{{detail.p}}">/{{detail.p}}/</view>
+      <view class="wc-section">
+        <view class="wc-section-title">📖 释义</view>
+        <view class="wc-cn">{{detail.cn}}</view>
+        <view class="wc-en" wx:if="{{detail.en}}">{{detail.en}}</view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.collocations.length}}">
+        <view class="wc-section-title">📖 高考固定搭配</view>
+        <view class="wc-coll" wx:for="{{detail.collocations}}" wx:key="en">
+          <text class="wc-coll-i">{{index + 1}}.</text>
+          <view class="wc-coll-body">
+            <view class="wc-coll-en">{{item.en}}</view>
+            <view class="wc-coll-cn">{{item.cn}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.synonyms.length}}">
+        <view class="wc-section-title">🔁 同义替换</view>
+        <view class="wc-syns">
+          <text class="wc-syn" wx:for="{{detail.synonyms}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <view class="wc-source">{{detail.source}}</view>
+      <view class="wc-actions">
+        <button class="wc-btn ghost" bindtap="removeDetailAndClose">✓ 已掌握，移除</button>
+        <button class="wc-btn" bindtap="closeWordCard">关闭</button>
+      </view>
+    </view>
+  </view>
+</view>
