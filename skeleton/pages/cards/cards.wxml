@@ -1,0 +1,93 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="hero">
+    <text class="hero-emoji">🎴</text>
+    <view class="hero-text">
+      <text class="hero-title">每日单词盲盒</text>
+      <text class="hero-desc">每天抽一张，稀有卡等你收集</text>
+    </view>
+  </view>
+
+  <view class="tabs">
+    <view class="tab {{tab === 'draw' ? 'tab-on' : ''}}" data-tab="draw" bindtap="switchTab">🎁 抽卡</view>
+    <view class="tab {{tab === 'album' ? 'tab-on' : ''}}" data-tab="album" bindtap="switchTab">📚 卡册 {{status.total}}</view>
+  </view>
+
+  <!-- 抽卡 -->
+  <block wx:if="{{tab === 'draw'}}">
+    <view class="draw-zone">
+      <view class="mystery-card">
+        <text class="mystery-icon">❓</text>
+        <text class="mystery-title">今日盲盒</text>
+        <text class="mystery-sub" wx:if="{{status.freeLeft > 0}}">免费次数还剩 {{status.freeLeft}} 次</text>
+        <text class="mystery-sub used" wx:else>今日免费已用完</text>
+      </view>
+    </view>
+
+    <button class="btn-primary draw-btn" bindtap="drawFree" wx:if="{{status.freeLeft > 0}}">🎁 免费抽一张</button>
+
+    <view class="energy-draw">
+      <view class="energy-draw-head">
+        <text class="ed-title">⚡ 用学习能量抽</text>
+        <text class="ed-balance">当前 {{status.energy}} 能量</text>
+      </view>
+      <button class="energy-draw-btn {{status.canEnergyDraw ? '' : 'ed-disabled'}}" bindtap="drawByEnergy">
+        消耗 {{status.energyCost}} 能量抽一次
+      </button>
+      <text class="ed-tip">答题攒能量 · 这是学习换来的机会</text>
+    </view>
+
+    <view class="more-row">
+      <button class="draw-more ad-more" bindtap="drawByAd">📺 看视频加抽</button>
+      <button class="draw-more freeze-more" bindtap="drawByFreeze">🧊 用补签卡抽</button>
+    </view>
+
+    <view class="rarity-guide">
+      <text class="guide-title">稀有度说明</text>
+      <view class="guide-row"><text class="g-icon">⚪</text><text class="g-name">普通卡</text><text class="g-rate">75%</text></view>
+      <view class="guide-row"><text class="g-icon">🔵</text><text class="g-name">稀有卡</text><text class="g-rate">前2次 25%</text></view>
+      <view class="guide-row"><text class="g-icon">🟣</text><text class="g-name">史诗卡</text><text class="g-rate">第3次起 25%</text></view>
+      <text class="guide-note">每天前2次出稀有卡 · 第3次起史诗概率提升 · 均为游戏内虚拟奖励</text>
+    </view>
+
+    <view class="stat-mini">
+      <text>已收集 {{status.total}} 张</text>
+      <text class="epic-count">🟣 史诗 {{status.epic}}</text>
+      <text class="rare-count">🔵 稀有 {{status.rare}}</text>
+    </view>
+  </block>
+
+  <!-- 卡册 -->
+  <block wx:else>
+    <view class="empty" wx:if="{{cards.length === 0}}">
+      <text class="empty-emoji">🎴</text>
+      <text class="empty-text">卡册还是空的</text>
+      <text class="empty-sub">去抽一张，开启收集</text>
+    </view>
+    <view class="card-grid" wx:else>
+      <view class="word-card card-{{item.r}}" wx:for="{{cards}}" wx:key="w">
+        <view class="card-top">
+          <text class="card-rarity">{{item.rIcon}} {{item.rName}}</text>
+          <text class="card-date">{{item.date}}</text>
+        </view>
+        <text class="card-word">{{item.w}}</text>
+        <text class="card-phonetic" wx:if="{{item.p}}">/{{item.p}}/</text>
+        <text class="card-mean">{{item.m}}</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 抽卡结果弹窗 -->
+  <view class="overlay" wx:if="{{showResult}}">
+    <view class="result-card draw-result">
+      <text class="draw-emoji">{{lastDraw.r === 'epic' ? '🌟' : lastDraw.r === 'rare' ? '💎' : '✨'}}</text>
+      <text class="draw-rarity {{lastDraw.r}}">{{lastDraw.rIcon}} {{lastDraw.rName}}卡！</text>
+      <view class="card-show card-{{lastDraw.r}}">
+        <text class="card-word">{{lastDraw.w}}</text>
+        <text class="card-phonetic" wx:if="{{lastDraw.p}}">/{{lastDraw.p}}/</text>
+        <text class="card-mean">{{lastDraw.m}}</text>
+      </view>
+      <button class="btn-primary result-btn" bindtap="closeResult">收下</button>
+    </view>
+  </view>
+</view>
