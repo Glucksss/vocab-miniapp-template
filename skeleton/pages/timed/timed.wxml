@@ -1,0 +1,80 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <!-- 倒计时环 -->
+  <view class="timer-wrap">
+    <view class="timer-circle">
+      <text class="timer-num">{{timeLeft}}</text>
+      <text class="timer-unit">秒</text>
+    </view>
+    <view class="timer-track"><view class="timer-fill" style="width: {{progress}}%"></view></view>
+  </view>
+
+  <!-- 开始时 -->
+  <view class="intro" wx:if="{{!started}}">
+    <text class="intro-emoji">⚡</text>
+    <text class="intro-title">限时风暴</text>
+    <text class="intro-desc">60秒极速答题，连对越多分越高</text>
+    <view class="best-badge">🏆 最高分 {{best}}</view>
+    <button class="btn-primary start-btn" bindtap="start">开始挑战</button>
+  </view>
+
+  <!-- 游戏中 -->
+  <block wx:if="{{started && !gameOver}}">
+    <view class="score-row">
+      <view class="score-box"><text class="score-label">得分</text><text class="score-val">{{score}}</text></view>
+      <view class="score-box"><text class="score-label">连击</text><text class="score-val combo">×{{combo}}</text></view>
+      <view class="score-box"><text class="score-label">答对</text><text class="score-val">{{correct}}</text></view>
+    </view>
+    <view class="question-card">
+      <view class="q-head">
+        <text class="q-main">{{currentQ.q}}</text>
+        <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+      </view>
+    </view>
+    <view class="option-list">
+      <view class="option {{feedback === 'right' && item.w === currentQ.answer ? 'opt-right' : ''}} {{feedback === 'wrong' && item.w === wrongPick ? 'opt-wrong' : ''}}"
+            wx:for="{{currentQ.options}}" wx:key="w" data-word="{{item.w}}" bindtap="tapOption">
+        <text class="opt-text">{{item.w}}</text>
+        <text class="opt-mark" wx:if="{{feedback === 'wrong' && item.w === wrongPick}}">✕</text>
+        <text class="opt-mark" wx:elif="{{feedback === 'right' && item.w === currentQ.answer}}">✓</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 结算 -->
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">⚡</text>
+      <text class="result-title">时间到！</text>
+      <text class="new-best" wx:if="{{isNewBest}}">🎉 新纪录！</text>
+      <view class="final-score">{{displayScore}}</view>
+      <text class="final-label">{{scoreDoubled ? '本局得分 · 已翻倍' : '本局得分'}}</text>
+      <view class="result-stats">
+        <view><text class="rs-num">{{correct}}</text><text class="rs-label">答对</text></view>
+        <view><text class="rs-num">{{total}}</text><text class="rs-label">总答题</text></view>
+        <view><text class="rs-num">{{best}}</text><text class="rs-label">最高分</text></view>
+      </view>
+      <view class="wrong-review" wx:if="{{wrongWords.length}}" bindtap="viewWrong">
+        <text class="wr-icon">📕</text>
+        <view class="wr-text">
+          <text class="wr-title">本局错词 {{wrongWords.length}} 个</text>
+          <text class="wr-sub">点进去查看并消灭它们 →</text>
+        </view>
+        <text class="wr-arrow">›</text>
+      </view>
+      <button class="btn-primary result-btn" bindtap="retry">再来一局</button>
+      <button class="result-btn ad-retry-btn" wx:if="{{!scoreDoubled}}" bindtap="doubleScoreByAd">📺 看视频 · 分数翻倍</button>
+      <view class="score-doubled-tip" wx:else>✅ 分数已翻倍 · 本局只翻一次</view>
+      <button class="result-btn ghost" bindtap="backHome">返回地图</button>
+    </view>
+  </view>
+
+  <!-- 底部装饰：赛道终点旗 + 速度线 + 闪电（限时风暴专属） -->
+  <view class="foot-deco td-deco">
+    <view class="td-speed td-sp1"></view>
+    <view class="td-speed td-sp2"></view>
+    <view class="td-speed td-sp3"></view>
+    <view class="td-flag"><view class="td-flag-cloth"></view></view>
+    <text class="td-bolt">⚡</text>
+  </view>
+</view>
