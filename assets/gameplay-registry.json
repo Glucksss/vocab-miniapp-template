@@ -1,0 +1,19 @@
+[
+  { "id": "index",    "name": "首页",           "page": "pages/index/index",       "core": true,  "entry": ["app.json tabBar 闯关"], "depends": ["storage", "tts"] },
+  { "id": "practice", "name": "练习场",         "page": "pages/practice/practice", "core": true,  "entry": ["app.json tabBar 练习"], "depends": ["storage", "ad", "ui"] },
+  { "id": "treasure", "name": "宝箱仓库",       "page": "pages/treasure/treasure", "core": true,  "entry": ["app.json tabBar 宝箱"], "depends": ["storage", "ad"] },
+  { "id": "pet",      "name": "宠物养成",       "page": "pages/pet/pet",           "core": true,  "entry": ["app.json tabBar 我的"], "depends": ["storage", "tts"] },
+  { "id": "game",     "name": "打地鼠（九宫格选义）", "page": "pages/game/game",   "core": false, "entry": ["practice.wxml hero 主卡 quickPlay", "index.wxml 速玩卡"], "depends": ["quiz", "storage", "tts", "ad", "volPicker", "ui", "wordCard"] },
+  { "id": "spell",    "name": "单词拼图（字母重排）", "page": "pages/spell/spell", "core": false, "entry": ["practice.wxml 更多玩法 openSpell"], "depends": ["quiz", "storage", "tts", "volPicker", "ui"] },
+  { "id": "timed",    "name": "限时风暴（60秒抢分）", "page": "pages/timed/timed", "core": false, "entry": ["practice.wxml 挑战自我 focus-timed", "index.wxml 3分钟速玩"], "depends": ["quiz", "storage", "tts", "ad", "ui"] },
+  { "id": "boss",     "name": "Boss 战（高考/真题题库）", "page": "pages/boss/boss", "core": false, "entry": ["practice.wxml 挑战自我 focus-boss"], "depends": ["quiz", "storage", "tts", "ui"] },
+  { "id": "clean",    "name": "错词清剿（三遍过滤）", "page": "pages/clean/clean",  "core": false, "entry": ["practice.wxml 更多玩法 openWrong"], "depends": ["quiz", "storage", "tts", "ui"] },
+  { "id": "wrong",    "name": "错词本（清单+查看词卡）", "page": "pages/wrong/wrong", "core": false, "entry": ["我的/错词本入口"], "depends": ["storage", "tts", "wordCard"] },
+  { "id": "review",   "name": "遗忘曲线复习",   "page": "pages/review/review",     "core": false, "entry": ["practice.wxml 更多玩法 openReview", "index.wxml 复习卡"], "depends": ["quiz", "storage", "tts", "ui"] },
+  { "id": "achieve",  "name": "收集与成就",     "page": "pages/achieve/achieve",   "core": false, "entry": ["我的/成就入口"], "depends": ["storage", "tts"] },
+  { "id": "context",  "name": "语境辨析关",     "page": "pages/context/context",   "core": false, "entry": ["practice.wxml 更多玩法 openContext"], "depends": ["storage", "tts", "ui"] },
+  { "id": "cards",    "name": "单词盲盒抽卡",   "page": "pages/cards/cards",       "core": false, "entry": ["宝箱页/抽卡入口"], "depends": ["storage", "ad", "tts", "ui"] },
+  { "id": "map",      "name": "大地图册次路线", "page": "pages/map/map",           "core": false, "entry": ["首页/游戏大地图卡片", "practice.wxml goChallenge"], "depends": ["storage", "quiz", "volPicker", "ui"] },
+  { "id": "chapter",  "name": "五步闯关+开箱",  "page": "pages/chapter/chapter",    "core": false, "entry": ["map.wxml 关卡卡片"], "depends": ["quiz", "storage", "tts", "ad", "volPicker", "wordCard", "ui"] },
+  { "id": "recite",   "name": "安静背诵（翻卡自评）", "page": "pages/recite/recite", "core": false, "entry": ["practice.wxml 更多玩法 openRecite"], "depends": ["quiz", "storage", "tts", "volPicker", "ui"] }
+]
