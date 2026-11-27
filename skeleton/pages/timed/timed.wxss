@@ -1,0 +1,65 @@
+.page { position: relative; box-sizing: border-box; min-height: 100vh; padding: 30rpx 28rpx 60rpx; }
+.timer-wrap { display: flex; flex-direction: column; align-items: center; }
+.timer-circle {
+  width: 180rpx; height: 180rpx; border-radius: 50%;
+  background: linear-gradient(135deg, #FF9A4D, #FF6B35);
+  display: flex; align-items: baseline; justify-content: center;
+  box-shadow: 0 10rpx 30rpx rgba(255,107,53,0.35);
+}
+.timer-num { font-size: 80rpx; font-weight: 800; color: #FFFFFF; line-height: 180rpx; }
+.timer-unit { font-size: 24rpx; color: #FFFFFF; margin-left: 4rpx; }
+.timer-track { margin-top: 20rpx; width: 400rpx; height: 12rpx; background: #FFE0CC; border-radius: 999rpx; overflow: hidden; }
+.timer-fill { height: 100%; background: #FF6B35; border-radius: 999rpx; }
+.intro { display: flex; flex-direction: column; align-items: center; margin-top: 60rpx; }
+.intro-emoji { font-size: 90rpx; }
+.intro-title { margin-top: 16rpx; font-size: 44rpx; font-weight: 800; color: #2B2456; }
+.intro-desc { margin-top: 12rpx; font-size: 26rpx; color: #9A96B8; text-align: center; }
+.best-badge { margin-top: 28rpx; background: #FFF4E0; color: #D98600; padding: 14rpx 32rpx; border-radius: 999rpx; font-size: 26rpx; font-weight: 700; }
+.start-btn { margin-top: 48rpx; width: 400rpx; font-size: 32rpx; padding: 24rpx 0; background: linear-gradient(135deg, #FF9A4D, #FF6B35); box-shadow: 0 8rpx 20rpx rgba(255,107,53,0.3); }
+.score-row { display: flex; margin-top: 32rpx; }
+.score-box { flex: 1; margin-right: 14rpx; background: #FFFFFF; border-radius: 20rpx; padding: 16rpx; display: flex; flex-direction: column; align-items: center; }
+.score-box:last-child { margin-right: 0; }
+.score-label { font-size: 22rpx; color: #9A96B8; }
+.score-val { margin-top: 6rpx; font-size: 34rpx; font-weight: 800; color: #FF6B35; }
+.score-val.combo { color: #FFB020; }
+.question-card { margin-top: 28rpx; background: #FFFFFF; border: 3rpx solid #FFD9B0; border-radius: 28rpx; padding: 40rpx 28rpx; display: flex; align-items: center; justify-content: center; min-height: 160rpx; box-shadow: 0 8rpx 0 #E9D6BC, 0 16rpx 28rpx rgba(107,91,168,.16); }
+.q-main { font-size: 38rpx; font-weight: 800; color: #2B2456; text-align: center; }
+.option-list { margin-top: 28rpx; }
+.option { position: relative; background: #FFFFFF; border: 3rpx solid #DCD3F5; border-radius: 20rpx; padding: 28rpx; margin-bottom: 16rpx; display: flex; align-items: center; justify-content: center; box-shadow: 0 8rpx 0 #C7B8EA, 0 14rpx 28rpx rgba(107,91,168,.22); }
+.option:active { transform: translateY(4rpx); box-shadow: 0 4rpx 0 #C7B8EA, 0 8rpx 16rpx rgba(107,91,168,.22); }
+.opt-text { flex: 1; min-width: 0; text-align: center; font-size: 32rpx; font-weight: 700; color: #4B4480; }
+.opt-right { background: #D9F7E8; border-color: #38B6A0; box-shadow: 0 8rpx 0 #7FD9B4, 0 12rpx 24rpx rgba(56,182,160,.24); }
+.opt-wrong { background: #FFE9EE; border-color: #FF4D6D; box-shadow: 0 8rpx 0 #E85470, 0 12rpx 24rpx rgba(255,77,109,.28); }
+.opt-mark { margin-left: auto; font-size: 32rpx; font-weight: 800; }
+.opt-wrong .opt-text, .opt-wrong .opt-mark { color: #C4183C; }
+.opt-right .opt-mark { color: #1D9E75; }
+.overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(43,36,86,0.55); display: flex; align-items: center; justify-content: center; }
+.result-card { width: 600rpx; background: #FFFFFF; border-radius: 36rpx; padding: 44rpx 40rpx; display: flex; flex-direction: column; align-items: center; }
+.result-emoji { font-size: 72rpx; }
+.result-title { margin-top: 8rpx; font-size: 38rpx; font-weight: 800; color: #2B2456; }
+.new-best { margin-top: 12rpx; font-size: 26rpx; color: #FF6B35; font-weight: 700; }
+.final-score { margin-top: 20rpx; font-size: 88rpx; font-weight: 800; color: #FF6B35; }
+.final-label { font-size: 24rpx; color: #9A96B8; }
+.result-stats { display: flex; width: 100%; margin-top: 28rpx; justify-content: space-around; }
+.result-stats view { display: flex; flex-direction: column; align-items: center; }
+.rs-num { font-size: 38rpx; font-weight: 800; color: #5B4BD6; }
+.rs-label { margin-top: 6rpx; font-size: 22rpx; color: #9A96B8; }
+.result-btn { width: 100%; margin-top: 32rpx; font-size: 30rpx; padding: 22rpx 0; }
+.result-btn.ghost { margin-top: 14rpx; background: #F4F2FF; color: #5B4BD6; font-weight: 600; }
+.ad-retry-btn { margin-top: 14rpx; background: linear-gradient(90deg, #FFE0A3, #FFB65C); color: #8A4300; font-weight: 800; box-shadow: 0 4rpx 0 #E39432; }
+.score-doubled-tip { width: 100%; margin-top: 14rpx; padding: 18rpx 0; text-align: center; font-size: 26rpx; font-weight: 700; color: #2E8B57; background: #E9F8EE; border-radius: 999rpx; }
+/* 底部装饰：赛道终点旗 + 速度线 + 闪电（橙色系，不拦截点击） */
+.foot-deco { position: absolute; left: 0; right: 0; bottom: 0; height: 120rpx; z-index: 0; pointer-events: none; overflow: hidden; }
+.td-speed { position: absolute; bottom: 76rpx; height: 5rpx; border-radius: 999rpx; background: rgba(255,107,53,.28); }
+.td-sp1 { left: 8%; width: 90rpx; } .td-sp2 { left: 22%; width: 60rpx; bottom: 92rpx; } .td-sp3 { right: 12%; width: 110rpx; }
+.td-flag { position: absolute; left: 46%; bottom: 18rpx; width: 6rpx; height: 76rpx; background: #FF9A4D; border-radius: 4rpx; }
+.td-flag-cloth { position: absolute; top: 4rpx; left: 6rpx; width: 56rpx; height: 36rpx; background: repeating-linear-gradient(135deg, #FFB07C 0 12rpx, #FF6B35 12rpx 24rpx); border-radius: 0 8rpx 8rpx 0; }
+.td-bolt { position: absolute; right: 24%; bottom: 56rpx; font-size: 40rpx; opacity: .5; }
+/* 结算弹窗：本局错词入口 */
+.wrong-review { display: flex; align-items: center; width: 100%; margin-top: 26rpx; padding: 18rpx 20rpx; background: #FFF0F3; border: 2rpx solid #FFC4D0; border-radius: 20rpx; box-shadow: 0 6rpx 0 #F3B8CA; }
+.wrong-review:active { transform: translateY(3rpx); box-shadow: 0 3rpx 0 #F3B8CA; }
+.wr-icon { font-size: 44rpx; margin-right: 16rpx; }
+.wr-text { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.wr-title { font-size: 26rpx; font-weight: 800; color: #C4183C; }
+.wr-sub { margin-top: 4rpx; font-size: 20rpx; color: #E5547A; }
+.wr-arrow { font-size: 40rpx; color: #E5547A; margin-left: 10rpx; }
