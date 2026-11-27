@@ -1,0 +1,128 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <!-- 背诵进度卡：墨青渐变 + 引号/星点装饰 -->
+  <view class="mastery-card">
+    <view class="deco-quote quote-a">“</view>
+    <view class="deco-quote quote-b">”</view>
+    <view class="deco-star star-a">✦</view>
+    <view class="deco-star star-b">✧</view>
+    <view class="mastery-icon">✅</view>
+    <view class="mastery-text">
+      <text class="mastery-title">安静背诵进度</text>
+      <text class="mastery-desc">无计时 · 无干扰 · 翻转词卡慢慢背</text>
+    </view>
+    <view class="mastery-badge">{{knownWords.length}}</view>
+  </view>
+
+  <view class="stat-row">
+    <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{words.length ? pos + 1 : 0}}/{{words.length}}</text></view>
+    <view class="stat-box"><text class="stat-label">已会</text><text class="stat-val">{{knownWords.length}}</text></view>
+    <view class="stat-box"><text class="stat-label">掌握率</text><text class="stat-val">{{masteryRate}}%</text></view>
+  </view>
+
+  <!-- 册次/单元选择器：和打地鼠同款，选完范围后重建背诵内容 -->
+  <view class="vol-dropdown">
+    <view class="vol-mask" wx:if="{{volOpen}}" bindtap="closeVolMenu"></view>
+    <view class="vol-trigger" bindtap="toggleVolMenu">
+      <view class="vol-trigger-left">
+        <view class="vol-trigger-icon">🎯</view>
+        <view class="vol-trigger-text">
+          <text class="vol-trigger-cap">点击换册次 / 单元范围</text>
+          <text class="vol-trigger-name">{{volumes[activeVol-1].name}} · {{activeUnit === 0 ? '整册混合' : 'Unit ' + activeUnit}}</text>
+        </view>
+      </view>
+      <view class="vol-trigger-right"><view class="vol-caret {{volOpen ? 'vol-caret-open' : ''}}"></view></view>
+    </view>
+    <view class="vol-panel" wx:if="{{volOpen}}">
+      <view class="vol-group" wx:for="{{volGroups}}" wx:key="title" wx:for-item="g">
+        <view class="vol-group-head"><text class="vol-group-title">{{g.title}}</text><text class="vol-group-hint">{{g.hint}}</text></view>
+        <view class="vol-group-items">
+          <view class="vol-opt {{activeVol === sub.v ? 'vol-opt-on' : ''}} {{sub.special ? 'vol-opt-sp' : ''}}" wx:for="{{g.items}}" wx:key="v" wx:for-item="sub" data-v="{{sub.v}}" bindtap="switchVol">
+            <text class="vol-opt-name">{{sub.name}}</text><text class="vol-opt-check" wx:if="{{activeVol === sub.v}}">✓</text>
+          </view>
+        </view>
+      </view>
+      <view class="vol-group">
+        <view class="vol-group-head"><text class="vol-group-title">② 出题范围</text><text class="vol-group-hint">选单元只背该单元，整册混合背全册</text></view>
+        <view class="vol-group-items">
+          <view class="vol-opt {{activeUnit === item.u ? 'vol-opt-on' : ''}}" wx:for="{{unitOptions}}" wx:key="u" data-u="{{item.u}}" bindtap="switchUnit">
+            <text class="vol-opt-name">{{item.name}}</text><text class="vol-opt-check" wx:if="{{activeUnit === item.u}}">✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 选关卡 -->
+  <view class="level-bar" bindtap="toggleLevels">
+    <text>当前：{{volumes[activeVol-1].name}} · {{levelName}} · {{words.length}} 词</text>
+    <text class="level-expand">{{showLevels ? '收起 ▲' : '选关卡 ▼'}}</text>
+  </view>
+  <view class="level-grid" wx:if="{{showLevels}}">
+    <view class="level-node {{item.idx === levelIdx ? 'level-on' : ''}}" wx:for="{{currentLevels}}" wx:key="idx" data-idx="{{item.idx}}" bindtap="openLevel">
+      <text class="level-label">{{item.label}}</text>
+    </view>
+  </view>
+
+  <!-- 翻转词卡 -->
+  <view class="recite-wrap">
+    <view class="progress-tag">认识 {{knownWords.length}} / {{words.length}}</view>
+    <view class="progress-bar"><view class="progress-fill" style="width: {{words.length ? knownWords.length * 100 / words.length : 0}}%"></view></view>
+
+    <view class="word-card {{flipped ? 'flipped' : ''}}" bindtap="tapCard" wx:if="{{current}}">
+      <view class="card-face card-front">
+        <text class="card-hint">点一下翻面看释义</text>
+        <text class="card-word">{{current.w}}</text>
+        <text class="card-phonetic" wx:if="{{current.p}}">/{{current.p}}/</text>
+        <text class="card-tap">轻点卡片翻面 ↻</text>
+      </view>
+      <view class="card-face card-back">
+        <text class="card-hint">再点一下翻回去</text>
+        <text class="card-word-small">{{current.w}}</text>
+        <text class="card-meaning">{{current.m}}</text>
+        <view class="back-section">
+          <text class="back-title">🔗 固定搭配</text>
+          <view class="back-line" wx:for="{{current.collocations}}" wx:key="en">{{index + 1}}. {{item.en}}{{item.cn ? ' — ' + item.cn : ''}}</view>
+          <text class="back-empty" wx:if="{{!current.collocations.length}}">暂未收录</text>
+        </view>
+        <view class="back-section">
+          <text class="back-title">🔁 同义替换</text>
+          <view class="syn-row" wx:if="{{current.synonyms.length}}">
+            <text class="syn-chip" wx:for="{{current.synonyms}}" wx:key="*this">{{item}}</text>
+          </view>
+          <text class="back-empty" wx:else>暂未收录</text>
+        </view>
+        <text class="card-tap">轻点卡片翻面 ↻</text>
+      </view>
+    </view>
+
+    <view class="done-card" wx:if="{{done}}">
+      <text class="done-emoji">🎉</text>
+      <text class="done-title">这一关背完了</text>
+      <text class="done-desc">已认识 {{knownWords.length}} / {{words.length}} 词</text>
+      <view class="done-btn" bindtap="restart">再过一遍</view>
+    </view>
+
+    <view class="action-row" wx:if="{{current}}">
+      <view class="act act-again" bindtap="markAgain">再学一遍</view>
+      <view class="act act-know" bindtap="markKnown">认识了 ✓</view>
+    </view>
+    <view class="nav-row" wx:if="{{current}}">
+      <text class="nav-btn" bindtap="prev">← 上一词</text>
+      <text class="nav-pos">{{pos + 1}} / {{words.length}}</text>
+      <text class="nav-btn" bindtap="next">下一词 →</text>
+    </view>
+    <view class="speak-wrap" wx:if="{{current}}">
+      <view class="recite-speak" bindtap="speak">🔊 朗读这个单词</view>
+      <text class="speak-tip" wx:if="{{speakTip}}">{{speakTip}}</text>
+    </view>
+  </view>
+
+  <!-- 底部装饰：翻开的书本 + 引号 + 安静星点（安静背诵专属） -->
+  <view class="foot-deco rc-deco">
+    <view class="rc-book"><view class="rc-page rc-page-l"></view><view class="rc-page rc-page-r"></view></view>
+    <text class="rc-quote rc-q1">“</text>
+    <text class="rc-quote rc-q2">”</text>
+    <text class="rc-star">✧</text>
+  </view>
+</view>
