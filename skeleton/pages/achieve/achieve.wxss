@@ -1,0 +1,50 @@
+.page { box-sizing: border-box; min-height: 100vh; padding: 28rpx 28rpx 60rpx; }
+.hero { display: flex; align-items: center; background: linear-gradient(135deg, #F5B942, #E89A1C); border-radius: 28rpx; padding: 30rpx; color: #FFF; box-shadow: 0 10rpx 30rpx rgba(232,154,28,0.3); }
+.hero-emoji { font-size: 64rpx; }
+.hero-text { margin-left: 20rpx; display: flex; flex-direction: column; }
+.hero-title { font-size: 36rpx; font-weight: 800; }
+.hero-desc { margin-top: 6rpx; font-size: 22rpx; opacity: 0.92; }
+
+.tabs { display: flex; margin-top: 26rpx; background: #EFECFF; border-radius: 999rpx; padding: 6rpx; }
+.tab { flex: 1; text-align: center; padding: 18rpx 0; border-radius: 999rpx; font-size: 26rpx; font-weight: 700; color: #8A86A8; }
+.tab-on { background: #FFF; color: #5B4BD6; box-shadow: 0 4rpx 12rpx rgba(91,75,214,0.12); }
+
+.progress-card { margin-top: 24rpx; background: #FFF; border-radius: 22rpx; padding: 26rpx; }
+.progress-head { display: flex; justify-content: space-between; align-items: center; }
+.progress-title { font-size: 26rpx; font-weight: 700; color: #2B2456; }
+.progress-pct { font-size: 26rpx; font-weight: 800; color: #E89A1C; }
+.progress-track { margin-top: 16rpx; height: 14rpx; background: #F0EEFA; border-radius: 999rpx; overflow: hidden; }
+.progress-fill { height: 100%; background: linear-gradient(90deg, #F5C96B, #E89A1C); border-radius: 999rpx; }
+
+.badge-grid { display: flex; flex-wrap: wrap; margin-top: 24rpx; }
+.badge-item { width: 31.5%; margin-right: 2.35%; margin-bottom: 18rpx; box-sizing: border-box; background: #FFF; border-radius: 22rpx; padding: 24rpx 10rpx; display: flex; flex-direction: column; align-items: center; text-align: center; }
+.badge-item:nth-child(3n) { margin-right: 0; }
+.badge-on { box-shadow: 0 6rpx 20rpx rgba(232,154,28,0.16); }
+.badge-off { background: #F7F6FC; }
+.badge-icon { font-size: 56rpx; }
+.badge-off .badge-icon { filter: grayscale(1); opacity: 0.42; }
+.badge-off .badge-name { color: #8A86A8; }
+.badge-off .badge-desc { color: #B9B5CE; }
+.badge-name { margin-top: 10rpx; font-size: 24rpx; font-weight: 700; color: #2B2456; }
+.badge-desc { margin-top: 8rpx; font-size: 19rpx; color: #9A96B8; min-height: 54rpx; line-height: 1.4; }
+.badge-status { margin-top: 10rpx; font-size: 18rpx; color: #E89A1C; font-weight: 700; }
+.badge-off .badge-status { color: #B0ACCA; }
+.badge-pbar { width: 100%; height: 8rpx; border-radius: 999rpx; background: #E8E5F4; margin-top: 10rpx; overflow: hidden; }
+.badge-pfill { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg, #F5C96B, #E89A1C); }
+.badge-pnum { margin-top: 6rpx; font-size: 17rpx; color: #B0ACCA; }
+.hint { margin-top: 10rpx; text-align: center; font-size: 20rpx; color: #B0ACCA; }
+
+.book-head { margin-top: 24rpx; }
+.book-title { font-size: 26rpx; font-weight: 700; color: #2B2456; }
+.search { margin-top: 16rpx; width: 100%; box-sizing: border-box; background: #FFF; border-radius: 999rpx; padding: 20rpx 30rpx; font-size: 24rpx; color: #2B2456; }
+.empty { margin-top: 100rpx; display: flex; flex-direction: column; align-items: center; }
+.empty-emoji { font-size: 96rpx; }
+.empty-text { margin-top: 20rpx; font-size: 32rpx; font-weight: 700; color: #5B5680; }
+.empty-sub { margin-top: 12rpx; font-size: 22rpx; color: #9A96B8; }
+.word-list { margin-top: 20rpx; }
+.word-item { display: flex; align-items: center; justify-content: space-between; background: #FFF; border-radius: 18rpx; padding: 20rpx 22rpx; margin-bottom: 12rpx; }
+.word-left { display: flex; flex-direction: column; flex: 1; }
+.word-name { font-size: 28rpx; font-weight: 700; color: #2B2456; }
+.word-phonetic { margin-top: 2rpx; font-size: 20rpx; color: #7B6BF0; }
+.word-mean { margin-top: 6rpx; font-size: 21rpx; color: #8A86A8; }
+.word-count { font-size: 22rpx; color: #E89A1C; font-weight: 700; margin-left: 16rpx; }
