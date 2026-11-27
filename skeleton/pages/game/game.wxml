@@ -1,0 +1,199 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <!-- 卡通背景装饰（不拦截点击） -->
+  <view class="cartoon-bg">
+    <view class="sky-sun"></view>
+    <view class="sky-cloud cloud-b"></view>
+    <view class="sky-cloud cloud-c"></view>
+    <text class="sky-spark sp-a">✦</text>
+    <text class="sky-spark sp-b">✧</text>
+    <text class="sky-spark sp-c">✦</text>
+    <view class="sky-hill hill-a"></view>
+    <view class="sky-hill hill-b"></view>
+    <!-- 底部草地小装饰：草丛 + 小花 + 小石头，纯 CSS 不拦截点击 -->
+    <view class="grass g1"></view>
+    <view class="grass g2"></view>
+    <view class="grass g3"></view>
+    <view class="grass g4"></view>
+    <view class="grass g5"></view>
+    <view class="ground-flower fl1"><view class="fl-core"></view></view>
+    <view class="ground-flower fl2"><view class="fl-core"></view></view>
+    <view class="ground-stone st1"></view>
+    <view class="ground-stone st2"></view>
+  </view>
+  <!-- 顶部状态栏 -->
+  <view class="topbar">
+    <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{qIndex + 1}}/{{total}}</text></view>
+    <view class="stat-box"><text class="stat-label">得分</text><text class="stat-val">{{score}}</text></view>
+    <view class="stat-box"><text class="stat-label">生命</text><text class="stat-val hearts">{{lives > 0 ? '♥' : ''}}{{lives > 1 ? '♥' : ''}}{{lives > 2 ? '♥' : ''}}</text></view>
+  </view>
+
+
+  <!-- 吉祥物：当前宠物真立绘 + 台词 + 连击火焰 -->
+  <view class="mascot-card">
+    <view class="mascot-figure {{feedbackAnim}}">
+      <image class="mascot-img" src="{{petImg}}" mode="aspectFit" wx:if="{{petImg}}" />
+      <text class="mascot-fallback" wx:else>🦉</text>
+      <view class="mascot-shadow"></view>
+    </view>
+    <view class="mascot-right">
+      <view class="mascot-bubble {{feedbackAnim}}">
+        <text>{{bubbleText}}</text>
+        <text class="mascot-owner" wx:if="{{petName}}">— {{petName}}</text>
+      </view>
+      <view class="flame-row">
+        <text class="flame {{index < flameCount ? 'flame-on' : 'flame-off'}}" wx:for="{{flameSlots}}" wx:key="*this">🔥</text>
+        <text class="combo-tag" wx:if="{{combo >= 2}}">连击 ×{{combo}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 册次/单元选择器：状态栏下方，选完按新范围重出题 -->
+  <view class="vol-dropdown game-vol">
+    <view class="vol-mask" wx:if="{{volOpen}}" bindtap="closeVolMenu"></view>
+    <view class="vol-trigger" bindtap="toggleVolMenu">
+      <view class="vol-trigger-left">
+        <view class="vol-trigger-icon">🎯</view>
+        <view class="vol-trigger-text">
+          <text class="vol-trigger-cap">点击换册次 / 单元范围</text>
+          <text class="vol-trigger-name">{{volumes[activeVol-1].name}} · {{activeUnit === 0 ? '整册混合' : 'Unit ' + activeUnit}}</text>
+        </view>
+      </view>
+      <view class="vol-trigger-right"><view class="vol-caret {{volOpen ? 'vol-caret-open' : ''}}"></view></view>
+    </view>
+    <view class="vol-panel" wx:if="{{volOpen}}">
+      <view class="vol-group" wx:for="{{volGroups}}" wx:key="title" wx:for-item="g">
+        <view class="vol-group-head"><text class="vol-group-title">{{g.title}}</text><text class="vol-group-hint">{{g.hint}}</text></view>
+        <view class="vol-group-items">
+          <view class="vol-opt {{activeVol === sub.v ? 'vol-opt-on' : ''}} {{sub.special ? 'vol-opt-sp' : ''}}" wx:for="{{g.items}}" wx:key="v" wx:for-item="sub" data-v="{{sub.v}}" bindtap="switchVol">
+            <text class="vol-opt-name">{{sub.name}}</text><text class="vol-opt-check" wx:if="{{activeVol === sub.v}}">✓</text>
+          </view>
+        </view>
+      </view>
+      <view class="vol-group">
+        <view class="vol-group-head"><text class="vol-group-title">② 出题范围</text><text class="vol-group-hint">选单元只出该单元，整册混合全册随机</text></view>
+        <view class="vol-group-items">
+          <view class="vol-opt {{activeUnit === item.u ? 'vol-opt-on' : ''}}" wx:for="{{unitOptions}}" wx:key="u" data-u="{{item.u}}" bindtap="switchUnit">
+            <text class="vol-opt-name">{{item.name}}</text><text class="vol-opt-check" wx:if="{{activeUnit === item.u}}">✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 题干 -->
+  <view class="question-card {{feedback === 'right' ? 'q-right' : ''}} {{feedback === 'wrong' ? 'q-wrong' : ''}}">
+    <view class="q-head">
+      <text class="q-label">敲出这个意思的单词</text>
+      <text class="speak-btn" data-mode="meaning" bindtap="speakQuestion">🔊</text>
+    </view>
+    <text class="q-main">{{questions[qIndex].q}}</text>
+    <text class="q-phonetic" wx:if="{{questions[qIndex].phonetic}}">/{{questions[qIndex].phonetic}}/</text>
+  </view>
+
+  <!-- 地鼠九宫格：洞口 + 地鼠举单词牌 -->
+  <view class="hole-grid {{screenShake ? 'shaking' : ''}}">
+    <view class="hole hole-{{item.color}} {{item.hit === 'ok' ? 'hit-ok' : ''}} {{item.hit === 'laugh' ? 'hit-laugh' : ''}} {{item.reveal ? 'reveal' : ''}}"
+          wx:for="{{holes}}" wx:key="key" data-word="{{item.word}}" data-idx="{{item.idx}}" bindtap="tapHole">
+      <view class="pit"></view>
+      <view class="mole" wx:if="{{item.word}}">
+        <view class="mole-plate plate-i{{item.idx}} {{feedback === 'right' && isGold && item.word === tappedWord ? 'plate-gold' : ''}} {{feedback === 'right' && item.word === tappedWord && !isGold ? 'plate-right' : ''}} {{feedback === 'wrong' && item.word === tappedWord ? 'plate-wrong' : ''}} {{item.reveal ? 'plate-reveal' : ''}}"><text class="plate-mark" wx:if="{{feedback === 'right' && item.word === tappedWord}}">✓</text><text class="plate-mark" wx:if="{{feedback === 'wrong' && item.word === tappedWord}}">✗</text>{{item.word}}</view>
+        <view class="mole-face">
+          <view class="mole-ear mole-ear-l"></view>
+          <view class="mole-ear mole-ear-r"></view>
+          <view class="mole-head">
+            <view class="mole-eye mole-eye-l {{item.hit === 'ok' ? 'eye-x' : ''}} {{item.hit === 'laugh' ? 'eye-happy' : ''}}"></view>
+            <view class="mole-eye mole-eye-r {{item.hit === 'ok' ? 'eye-x' : ''}} {{item.hit === 'laugh' ? 'eye-happy' : ''}}"></view>
+            <view class="mole-snout"></view>
+            <view class="mole-nose"></view>
+            <view class="mole-mouth {{item.hit === 'laugh' ? 'mouth-laugh' : ''}} {{item.hit === 'ok' ? 'mouth-dizzy' : ''}}"></view>
+          </view>
+        </view>
+      </view>
+      <text class="gain-float" wx:if="{{feedback === 'right' && item.word === tappedWord && gainText}}">{{gainText}}</text>
+    </view>
+    <!-- 斜劈的锤子：定位到被点格子 -->
+    <view class="hammer {{hammerSwing ? 'hammer-swing' : ''}}" style="left:{{hammerX}}%;top:{{hammerY * 50}}%">
+      <view class="hammer-head"></view>
+      <view class="hammer-handle"></view>
+    </view>
+  </view>
+
+  <view class="tip">点中正确的单词 · 连对得分翻倍</view>
+
+  <view class="fb-actions" wx:if="{{feedback}}">
+    <view class="speak-answer" bindtap="speakAnswer">🔊 读单词</view>
+    <view class="wc-open" wx:if="{{canOpenDetail}}" bindtap="openWordCard">📖 看词卡</view>
+    <view class="next-open" bindtap="advance">下一题 →</view>
+  </view>
+
+  <!-- 复活弹窗 -->
+  <view class="overlay" wx:if="{{showRevive}}">
+    <view class="result-card revive-card">
+      <text class="revive-emoji">💔</text>
+      <text class="result-title">生命用完啦！</text>
+      <text class="revive-desc">再看一次就能继续闯关</text>
+      <button class="btn-primary result-btn" bindtap="reviveByAd">📺 看视频复活 · +2 命</button>
+      <button class="result-btn freeze-btn" bindtap="reviveByFreeze" wx:if="{{freezes > 0}}">🧊 用补签卡复活（剩 {{freezes}} 张）</button>
+      <button class="result-btn ghost" bindtap="giveUp">放弃，查看成绩</button>
+    </view>
+  </view>
+
+  <!-- 星际词卡弹层 -->
+  <view class="wc-mask" wx:if="{{detailOpen}}" bindtap="closeWordCard">
+    <view class="wc-card" catchtap="noop">
+      <view class="wc-close" bindtap="closeWordCard">✕</view>
+      <view class="wc-planet wc-planet-a">🌟</view>
+      <view class="wc-planet wc-planet-b">✨</view>
+      <view class="wc-title">星际单词探险</view>
+      <view class="wc-word">{{detail.w}}</view>
+      <view class="wc-phonetic" wx:if="{{detail.p}}">/{{detail.p}}/</view>
+      <view class="wc-section">
+        <view class="wc-section-title">📖 释义</view>
+        <view class="wc-cn">{{detail.cn}}</view>
+        <view class="wc-en" wx:if="{{detail.en}}">{{detail.en}}</view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.collocations.length}}">
+        <view class="wc-section-title">📖 高考固定搭配</view>
+        <view class="wc-coll" wx:for="{{detail.collocations}}" wx:key="en">
+          <text class="wc-coll-i">{{index + 1}}.</text>
+          <view class="wc-coll-body">
+            <view class="wc-coll-en">{{item.en}}</view>
+            <view class="wc-coll-cn">{{item.cn}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.synonyms.length}}">
+        <view class="wc-section-title">🔁 同义替换</view>
+        <view class="wc-syns">
+          <text class="wc-syn" wx:for="{{detail.synonyms}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <view class="wc-source">{{detail.source}}</view>
+      <view class="wc-actions">
+        <button class="wc-btn ghost" bindtap="addDetailToWrong">{{detailSaved ? '已加入错词本' : '加入错词本'}}</button>
+        <button class="wc-btn" bindtap="closeWordCardAndAdvance">下一题</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 结算弹窗 -->
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">{{won ? '🎉' : '💪'}}</text>
+      <text class="result-title">{{won ? '闯关成功！' : '再试一次吧'}}</text>
+      <view class="result-stars">
+        <text class="{{star >= 1 ? 'star-on' : 'star-off'}}">★</text>
+        <text class="{{star >= 2 ? 'star-on' : 'star-off'}}">★</text>
+        <text class="{{star >= 3 ? 'star-on' : 'star-off'}}">★</text>
+      </view>
+      <view class="result-stats">
+        <view><text class="rs-num">{{correct}}</text><text class="rs-label">答对</text></view>
+        <view><text class="rs-num">{{score}}</text><text class="rs-label">得分</text></view>
+        <view><text class="rs-num">{{maxCombo}}</text><text class="rs-label">最高连击</text></view>
+      </view>
+      <button class="btn-primary result-btn" bindtap="retry">再来一次</button>
+      <button class="result-btn ghost" bindtap="backHome">返回地图</button>
+    </view>
+  </view>
+</view>
