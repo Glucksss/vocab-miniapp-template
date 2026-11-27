@@ -1,0 +1,222 @@
+<view class="page">
+  <!-- 我的成长汇总 -->
+  <view class="mine-head">
+    <text class="mine-title">我的</text>
+    <view class="mine-stats">
+      <view class="mine-stat"><text class="ms-num">{{totalStars}}</text><text class="ms-label">⭐ 星星</text></view>
+      <view class="mine-stat"><text class="ms-num">{{streak}}</text><text class="ms-label">🔥 连胜</text></view>
+      <view class="mine-stat"><text class="ms-num">{{badgeEarned}}/{{badgeTotal}}</text><text class="ms-label">🏅 徽章</text></view>
+      <view class="mine-stat"><text class="ms-num">{{cardTotal}}</text><text class="ms-label">🎴 词卡</text></view>
+    </view>
+  </view>
+
+  <!-- 主舞台 -->
+  <view class="hero" style="background:linear-gradient(160deg,#EFEAFF,#E2D8FF)">
+    <view class="hero-top">
+      <text class="hero-label">我的伙伴</text>
+      <view class="rename-btn" bindtap="openRename">✏️ 改名</view>
+    </view>
+    <view class="pet-stage">
+      <view class="pet-glow" style="background:{{pet.color}}22"></view>
+      <image class="pet-img" src="{{pet.img}}" mode="aspectFit"></image>
+      <!-- 穿戴反馈：已穿装扮叠加在宠物身上 -->
+      <block wx:if="{{equip}}">
+        <block wx:for="{{equip.list}}" wx:key="id">
+          <text class="wear-on wear-{{item.slot}}" wx:if="{{item.wearing}}">{{item.icon}}</text>
+        </block>
+      </block>
+    </view>
+    <view class="pet-name-row">
+      <text class="pet-name">{{pet.name}}</text>
+      <text class="pet-title" style="color:{{pet.color}}">{{pet.title}}</text>
+    </view>
+    <text class="pet-desc">{{pet.desc}}</text>
+  </view>
+
+  <!-- 状态栏 -->
+  <view class="stat-row">
+    <view class="stat-box">
+      <text class="stat-num">{{pet.exp}}</text>
+      <text class="stat-label">成长值</text>
+    </view>
+    <view class="stat-box">
+      <text class="stat-num">{{pet.energy}}</text>
+      <text class="stat-label">⚡ 能量</text>
+    </view>
+    <view class="stat-box">
+      <text class="stat-num">{{pet.bond}}</text>
+      <text class="stat-label">💜 亲密</text>
+    </view>
+  </view>
+
+  <!-- 饥饿状态：绑定遗忘曲线到期词 -->
+  <view class="hunger-card hunger-lv{{pet.hunger.level}}">
+    <view class="hunger-head">
+      <text class="hunger-emoji">{{pet.hunger.level === 0 ? '😊' : pet.hunger.level === 1 ? '😐' : pet.hunger.level === 2 ? '😕' : '😟'}}</text>
+      <view class="hunger-text">
+        <text class="hunger-label">{{pet.hunger.label}} · {{pet.hunger.due}} 词待复习</text>
+        <text class="hunger-line">{{pet.hunger.line}}</text>
+      </view>
+    </view>
+    <view class="hunger-actions">
+      <button class="hunger-go" bindtap="goReview" wx:if="{{pet.hunger.due > 0}}">去复习喂它 →</button>
+      <view class="vac-toggle {{pet.hunger.vac ? 'vac-on' : ''}}" bindtap="onVacMode">{{pet.hunger.vac ? '☑ 托管中（假期免打扰）' : '☐ 开启托管（假期免打扰）'}}</view>
+    </view>
+  </view>
+
+  <!-- 成长进度：进化树 + 进度条合成一张卡 -->
+  <view class="grow-card">
+    <view class="grow-head">
+      <text class="grow-title" wx:if="{{!pet.isMax}}">距离进化成「{{pet.nextName}}」</text>
+      <text class="grow-title" wx:else>已达最终形态 · 词林枭皇</text>
+      <text class="grow-need" wx:if="{{!pet.isMax}}">还差 {{pet.toNext}} 成长值</text>
+    </view>
+    <!-- 进化树：5 形态，已解锁高亮，未解锁灰色剪影 -->
+    <view class="evo-tree">
+      <view class="evo-node {{item.unlocked ? '' : 'evo-locked'}} {{item.stage === pet.stage ? 'evo-current' : ''}}" wx:for="{{pet.stages}}" wx:key="stage">
+        <view class="evo-dot" style="background:{{item.unlocked ? item.color : '#D8D3EA'}}">{{item.unlocked ? '✓' : '·'}}</view>
+        <text class="evo-name">{{item.unlocked ? item.name : '？？？'}}</text>
+        <text class="evo-exp">{{item.exp}} 成长</text>
+      </view>
+    </view>
+    <view class="bar-track">
+      <view class="bar-fill" style="width:{{pet.progress}}%;background:{{pet.color}}"></view>
+    </view>
+    <text class="grow-tip">答对 +3 成长 · +1 能量　｜　答错不涨成长，收进错词本</text>
+  </view>
+
+  <!-- 喂食按钮 -->
+  <button class="feed-btn" bindtap="feed">🍃 喂一次 · 3 能量</button>
+  <button class="go-play-btn" bindtap="goPlay">去闯关赚成长值 →</button>
+
+  <!-- 我的快捷入口 -->
+  <view class="mine-links">
+    <view class="mine-link" bindtap="openAchieve"><text class="ml-icon">🏅</text><text class="ml-name">成就徽章</text><text class="ml-arrow">›</text></view>
+    <view class="mine-link" bindtap="openCards"><text class="ml-icon">🎴</text><text class="ml-name">词卡收藏 {{cardTotal}}</text><text class="ml-arrow">›</text></view>
+  </view>
+
+  <!-- Tab -->
+  <view class="tabs">
+    <view class="tab {{tab === 'home' ? 'tab-on' : ''}}" data-tab="home" bindtap="switchPetTab">🦉 伙伴</view>
+    <view class="tab {{tab === 'equip' ? 'tab-on' : ''}}" data-tab="equip" bindtap="switchPetTab">🎁 穿戴</view>
+    <view class="tab {{tab === 'gallery' ? 'tab-on' : ''}}" data-tab="gallery" bindtap="switchPetTab">🖼️ 图鉴</view>
+  </view>
+
+  <!-- 新伙伴计划：点亮感兴趣的方向，纯本地记录，无排行无日期 -->
+  <block wx:if="{{tab === 'home'}}">
+    <view class="wish-card">
+      <view class="wish-head">
+        <view>
+          <text class="wish-title">🔮 新伙伴计划</text>
+          <text class="wish-desc">点亮感兴趣的方向，新内容会参考大家的想法</text>
+        </view>
+        <text class="wish-count">已点亮 {{wishCount}}</text>
+      </view>
+
+      <view class="wish-group" wx:for="{{wishGroups}}" wx:for-item="group" wx:key="key">
+        <view class="wish-group-head" data-key="{{group.key}}" bindtap="toggleGroup">
+          <text class="wish-group-title">{{group.title}}{{group.open ? ' ▴' : ' ▾'}}</text>
+          <text class="wish-group-hint">{{group.open ? '收起' : '展开'}}</text>
+        </view>
+        <view class="wish-grid" wx:if="{{group.open}}">
+          <view class="wish-item {{item.on ? 'wish-on' : ''}}"
+                wx:for="{{group.items}}" wx:for-item="item" wx:key="id"
+                data-id="{{item.id}}" data-name="{{item.name}}" bindtap="toggleWish">
+            <text class="wish-icon">{{item.icon}}</text>
+            <text class="wish-name">{{item.on ? item.name + ' ✓' : item.name}}</text>
+          </view>
+        </view>
+      </view>
+
+      <view class="wish-foot">点亮＝感兴趣，不代表一定上线 · 只记在你自己的设备上</view>
+    </view>
+  </block>
+
+  <!-- 装备面板：碎片合成装扮，穿戴提升能量产出 -->
+  <block wx:if="{{tab === 'equip'}}">
+    <view class="equip-head">
+      <view class="shard-badge">
+        <view class="shard-gem"></view>
+        <text class="shard-num">{{equip.shards}}</text>
+        <text class="shard-label">装扮碎片</text>
+      </view>
+      <view class="equip-summary">
+        <text class="es-line">已解锁 {{equip.ownedCount}}/{{equip.total}} 件装扮</text>
+        <text class="es-bonus" wx:if="{{equip.bonus > 0}}">当前穿戴加成 · 能量产出 +{{equip.bonus}}%</text>
+        <text class="es-bonus es-none" wx:else>还没穿戴 · 穿上可加速攒能量</text>
+      </view>
+    </view>
+    <view class="equip-tip">开通关宝箱得碎片 → 合成装扮 → 穿戴后答题多攒能量。只提速，不卡关。</view>
+
+    <view class="equip-list">
+      <view class="eq-item {{item.wearing ? 'eq-wearing' : ''}}" wx:for="{{equip.list}}" wx:key="id">
+        <view class="eq-icon" style="background:{{item.color}}1F">{{item.icon}}</view>
+        <view class="eq-info">
+          <view class="eq-title-row">
+            <text class="eq-name">{{item.name}}</text>
+            <text class="eq-slot">{{item.slotName}}</text>
+            <text class="eq-bonus">+{{item.bonus}}%</text>
+          </view>
+          <text class="eq-desc">{{item.desc}}</text>
+          <!-- 未解锁：碎片进度条 + 合成按钮 -->
+          <block wx:if="{{!item.owned}}">
+            <view class="eq-bar"><view class="eq-bar-fill" style="width:{{item.progress}}%;background:{{item.color}}"></view></view>
+            <view class="eq-need" wx:if="{{item.need > 0}}">还差 {{item.need}} 片碎片</view>
+          </block>
+        </view>
+        <!-- 操作按钮 -->
+        <block wx:if="{{item.owned}}">
+          <view class="eq-btn {{item.wearing ? 'eq-btn-off' : 'eq-btn-on'}}" data-id="{{item.id}}" bindtap="wear">{{item.wearing ? '卸下' : '穿戴'}}</view>
+        </block>
+        <block wx:else>
+          <view class="eq-btn {{item.canCraft ? 'eq-btn-craft' : 'eq-btn-dis'}}" data-id="{{item.id}}" bindtap="{{item.canCraft ? 'craft' : ''}}">{{item.canCraft ? '合成' : '未解锁'}}</view>
+        </block>
+      </view>
+    </view>
+    <view class="equip-foot">碎片来自通关宝箱 · 同部位只能穿一件，随时可换</view>
+  </block>
+
+  <!-- 图鉴 -->
+  <block wx:if="{{tab === 'gallery'}}">
+    <view class="gallery">
+      <view class="g-item {{item.unlocked ? '' : 'locked'}}" wx:for="{{pet.stages}}" wx:key="stage">
+        <view class="g-imgbox {{item.unlocked ? '' : 'g-locked-box'}}" style="background:{{item.color}}18">
+          <image class="g-img" src="{{item.img}}" mode="aspectFit"></image>
+          <view class="g-silhouette" wx:if="{{!item.unlocked}}"></view>
+        </view>
+        <view class="g-info">
+          <text class="g-name">{{item.unlocked ? item.name : '？？？'}}</text>
+          <text class="g-title">{{item.unlocked ? item.title : '未解锁'}}</text>
+          <text class="g-exp">{{item.exp}} 成长值</text>
+        </view>
+        <text class="g-check" wx:if="{{item.unlocked}}">✓</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 进化弹窗 -->
+  <view class="overlay" wx:if="{{showEvolve}}">
+    <view class="evolve-card">
+      <text class="evolve-spark">✨ 进化成功 ✨</text>
+      <image class="evolve-img" src="{{evolve.img}}" mode="aspectFit"></image>
+      <text class="evolve-title">{{evolve.name}} · {{evolve.title}}</text>
+      <text class="evolve-desc">{{evolve.desc}}</text>
+      <button class="btn-primary result-btn" bindtap="closeEvolve">太棒了</button>
+    </view>
+  </view>
+
+  <!-- 改名弹窗 -->
+  <view class="overlay" wx:if="{{showRename}}">
+    <view class="rename-card">
+      <text class="rename-title">给它起个名字</text>
+      <input class="rename-input" value="{{renameValue}}" bindinput="onRenameInput" maxlength="8" placeholder="最多8个字"></input>
+      <view class="rename-btns">
+        <button class="rb cancel" bindtap="closeRename">取消</button>
+        <button class="rb confirm" bindtap="confirmRename">确定</button>
+      </view>
+    </view>
+  </view>
+
+  <!-- 轻提示 -->
+  <view class="toast" wx:if="{{toast}}">{{toast}}</view>
+</view>
