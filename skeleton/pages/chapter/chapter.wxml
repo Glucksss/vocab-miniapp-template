@@ -1,0 +1,189 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <!-- 顶部：左右各一颗白/黄星星，避开中间标题 -->
+  <view class="head">
+    <text class="head-star hs-1">✦</text>
+    <text class="head-star hs-2">✧</text>
+    <view class="head-title">{{volName}} · {{unitName}} · 闯关之旅</view>
+    <view class="head-sub">跟着词枭一步步向前</view>
+  </view>
+
+  <!-- 5 步进度 -->
+  <view class="steps">
+    <view class="step {{index < stageIndex ? 'step-done' : ''}} {{index == stageIndex ? 'step-now' : ''}}"
+          wx:for="{{stages}}" wx:key="key">
+      <view class="step-dot">{{index < stageIndex ? '✓' : item.icon}}</view>
+      <text class="step-name">{{item.name}}</text>
+      <view class="step-line" wx:if="{{index < stages.length - 1}}"></view>
+    </view>
+  </view>
+
+  <!-- 答题阶段：深蓝星空大卡 + 英文大字 + 四个中文ABCD胶囊 -->
+  <block wx:if="{{!finished && stageName != '宝箱' && current}}">
+    <view class="stage-bar">
+      <text class="stage-badge">{{stageIcon}} {{stageName}}</text>
+      <text class="stage-desc">{{stageDesc}}</text>
+    </view>
+    <view class="play-card">
+      <!-- 卡内小星星装饰：白/黄各一颗，纯字符，绝对定位，不挡内容 -->
+      <text class="pc-star ps-w ps-1">✦</text>
+      <text class="pc-star ps-y ps-2">✧</text>
+      <view class="pc-head">
+        <text class="pc-chapter">第{{unit}}关 · {{unitName}}</text>
+        <view class="pc-prog"><view class="pc-prog-fill" style="width: {{qIndex * 100 / questions.length}}%"></view></view>
+        <text class="pc-count">{{qIndex + 1}}/{{questions.length}}</text>
+      </view>
+
+      <!-- 限时题倒计时 -->
+      <view class="pc-timer" wx:if="{{current.type == 'timed' && !feedback}}">
+        <text class="timer-icon">⏱</text>
+        <view class="timer-track"><view class="timer-fill" style="width: {{timeLeft * 100 / 15}}%"></view></view>
+        <text class="timer-num">{{timeLeft}}s</text>
+      </view>
+
+      <!-- A. 选择类题（新学英→中 / 练习中→英 / 小挑战限时）：英文或中文大字 + ABCD 四选项 -->
+      <block wx:if="{{current.type != 'typing'}}">
+        <view class="pc-word {{current.type == 'forward' ? 'pc-word-cn' : ''}}">{{current.q}}</view>
+        <view class="pc-speak" bindtap="speakWord">🔊 听读音</view>
+        <view class="pc-options">
+          <view class="pc-opt {{feedback == 'right' && item.label == feedbackWord ? 'pc-opt-right' : ''}} {{feedback == 'wrong' && item.label == feedbackWord ? 'pc-opt-wrong' : ''}}"
+                wx:for="{{current.options}}" wx:key="label" wx:for-index="oi"
+                data-label="{{item.label}}" bindtap="tapOption">
+            <text class="pc-opt-key">{{keys[oi]}}</text>
+            <text class="pc-opt-label">{{item.label}}</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- B. 打字拼写题（复习）：中文释义 + 音标 + 系统键盘输入框 -->
+      <block wx:else>
+        <view class="spell-card">
+          <view class="spell-label">根据意思拼出单词</view>
+          <view class="spell-word">{{current.q}}</view>
+          <view class="spell-phonetic" wx:if="{{current.phonetic}}">/{{current.phonetic}}/</view>
+          <input class="spell-input {{feedback == 'right' ? 'spell-right' : ''}} {{feedback == 'wrong' ? 'spell-wrong' : ''}}"
+                 value="{{typed}}" bindinput="onTypeInput" bindconfirm="submitTyping"
+                 confirm-type="done" disabled="{{spellLocked}}" placeholder="点这里输入英文单词" />
+          <button class="spell-submit" bindtap="submitTyping" wx:if="{{!feedback}}">提交</button>
+        </view>
+      </block>
+
+      <view class="pc-dots">
+        <view class="pc-dot {{idx <= qIndex ? 'pc-dot-on' : ''}}" wx:for="{{questions}}" wx:for-item="q" wx:for-index="idx" wx:key="idx"></view>
+      </view>
+      <view class="pc-answer-card">{{current.type == 'typing' ? '拼写挑战' : '答题卡'}}</view>
+      <view class="feedback {{feedback}}" wx:if="{{feedback}}">
+        <text wx:if="{{feedback == 'right'}}">✅ {{current.type == 'typing' ? '拼写正确' : '答对啦'}}！{{feedbackWord}}</text>
+        <text wx:else>❌ 正确答案：{{feedbackWord}}</text>
+      </view>
+      <view class="fb-actions" wx:if="{{feedback}}">
+        <view class="fb-next" bindtap="advance">下一题 →</view>
+        <view class="wc-open" wx:if="{{canOpenDetail}}" bindtap="openWordCard">📖 看词卡：{{current.answer}}</view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 宝箱阶段 -->
+  <block wx:if="{{!finished && stageName == '宝箱'}}">
+    <view class="chest-stage">
+      <block wx:if="{{!chestOpened}}">
+        <view class="chest-box {{chestPassed ? 'chest-lv' + chest.tier : 'chest-locked'}}">{{chestPassed ? chest.icon : '🔒'}}</view>
+        <view class="chest-title">{{chestPassed ? chest.name : '宝箱还锁着'}}</view>
+        <view class="chest-desc">{{chestPassed ? '达标啦！可以开箱领奖' : '答对 9 题就能解锁宝箱'}}</view>
+        <view class="chest-preview" wx:if="{{chestPassed}}">
+          <text class="cp-item">⚡ 能量 +{{chest.energy}}</text>
+          <text class="cp-item" wx:if="{{chest.shards}}">🧩 碎片 +{{chest.shards}}</text>
+          <text class="cp-item" wx:if="{{chest.freezes}}">🎫 补签卡 +{{chest.freezes}}</text>
+          <text class="cp-item {{chest.cardMin ? 'cp-guarantee' : ''}}">🃏 {{chest.cardLabel}}</text>
+        </view>
+        <view class="chest-rule">
+          <text class="cr-line">✅ 开箱条件：宝箱前 15 题，答对 9 题即可开</text>
+          <text class="cr-line">🎁 宝箱前 15 题全对：能量翻倍 + 词卡升一档</text>
+        </view>
+        <view class="chest-reason">{{chestReason}}</view>
+        <view class="chest-note">档位看关卡：第1关木 · 第2关银 · 第3关金 · 第4关传说</view>
+        <button class="chest-btn" wx:if="{{chestPassed}}" bindtap="openChest">打开宝箱</button>
+        <button class="chest-btn chest-relearn" wx:else bindtap="relearn">再闯一次 ↻</button>
+      </block>
+      <block wx:else>
+        <view class="chest-box chest-lv{{chestResult.tier}}">{{chestResult.icon}}</view>
+        <view class="chest-title">获得 {{chestResult.name}}</view>
+        <view class="chest-reason" wx:if="{{chestResult.perfect}}">🎁 全对加成 · 能量翻倍！</view>
+        <view class="reward-list">
+          <view class="reward-item"><text class="ri-icon">⚡</text><text>能量 +{{chestResult.energy}}</text></view>
+          <view class="reward-item" wx:if="{{chestResult.shards}}"><text class="ri-icon">🧩</text><text>装扮碎片 +{{chestResult.shards}}</text></view>
+          <view class="reward-item" wx:if="{{chestResult.freezes}}"><text class="ri-icon">🎫</text><text>补签卡 +{{chestResult.freezes}}</text></view>
+          <view class="reward-item" wx:if="{{chestCard}}"><text class="ri-icon">{{chestCard.rIcon}}</text><text>{{chestCard.rName}}词卡「{{chestCard.w}}」已入册{{chestCard.kept ? '（已有更高稀有度）' : ''}}</text></view>
+          <view class="reward-item" wx:else><text class="ri-icon">🃏</text><text>单词卡 +1（已放入卡册）</text></view>
+        </view>
+        <view class="chest-equip-tip" wx:if="{{chestResult.shards}}">🧩 碎片已到账 · 去宠物页「穿戴」里合成装扮 →</view>
+        <button class="chest-ad-btn" wx:if="{{!chestDoubled}}" bindtap="doubleChestByAd">📺 看视频 · 能量碎片翻倍</button>
+        <view class="chest-doubled-tip" wx:else>✅ 本箱已翻倍 · 词卡与补签卡不参与</view>
+        <view class="chest-next" wx:if="{{chestResult.next}}">下次：{{chestResult.next.name}} · 能量 +{{chestResult.next.energy}}</view>
+        <button class="chest-btn" bindtap="nextAfterChest">继续挑战 →</button>
+      </block>
+    </view>
+  </block>
+
+  <!-- 结算 -->
+  <block wx:if="{{finished}}">
+    <view class="result">
+      <view class="result-star">{{star >= 3 ? '🏆' : star >= 1 ? '⭐' : '💪'}}</view>
+      <view class="result-title">{{star >= 3 ? '完美通关！' : star >= 1 ? '顺利通关' : '再接再厉'}}</view>
+      <view class="result-stars">
+        <text wx:for="{{starSlots}}" wx:key="*this" class="{{star >= item ? 'on' : ''}}">★</text>
+      </view>
+      <view class="result-line">主关答对 {{totalRight}} / {{totalCount}} 题</view>
+      <view class="result-addon" wx:if="{{addonDone}}">🎯 错词加练：答对 {{addonRight}} / {{addonCount}} 题</view>
+      <view class="result-badges" wx:if="{{earnedBadges.length}}">
+        <text wx:for="{{earnedBadges}}" wx:key="id">{{item.icon}} {{item.name}}</text>
+      </view>
+      <button class="result-btn addon" bindtap="startAddon">{{addonDone ? '再练 5 题' : '错词加练 5 题'}}</button>
+      <view class="result-tip">加练不计时 · 不影响主关星级</view>
+      <button class="result-btn" bindtap="backHome">返回地图</button>
+      <button class="result-btn ghost" bindtap="retry">再玩一次</button>
+    </view>
+  </block>
+
+  <!-- 星际词卡弹层：答完题后点「看词卡」进入，不提前泄题 -->
+  <view class="wc-mask" wx:if="{{detailOpen}}" bindtap="closeWordCard">
+    <view class="wc-card" catchtap="noop">
+      <view class="wc-close" bindtap="closeWordCard">✕</view>
+      <view class="wc-planet wc-planet-a">🌟</view>
+      <view class="wc-planet wc-planet-b">✨</view>
+      <view class="wc-title">星际单词探险</view>
+      <view class="wc-word">{{detail.w}}</view>
+      <view class="wc-phonetic" wx:if="{{detail.p}}">/{{detail.p}}/</view>
+
+      <view class="wc-section">
+        <view class="wc-section-title">📖 释义</view>
+        <view class="wc-cn">{{detail.cn}}</view>
+        <view class="wc-en" wx:if="{{detail.en}}">{{detail.en}}</view>
+      </view>
+
+      <view class="wc-section">
+        <view class="wc-section-title">📖 高考固定搭配</view>
+        <view class="wc-coll" wx:for="{{detail.collocations}}" wx:key="en">
+          <text class="wc-coll-i">{{index + 1}}.</text>
+          <view class="wc-coll-body">
+            <view class="wc-coll-en">{{item.en}}</view>
+            <view class="wc-coll-cn">{{item.cn}}</view>
+          </view>
+        </view>
+      </view>
+
+      <view class="wc-section">
+        <view class="wc-section-title">🔁 同义替换</view>
+        <view class="wc-syns">
+          <text class="wc-syn" wx:for="{{detail.synonyms}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+
+      <view class="wc-source">{{detail.source}}</view>
+      <view class="wc-actions">
+        <button class="wc-btn ghost" bindtap="addDetailToWrong">{{detailSaved ? '已加入错词本' : '加入错词本'}}</button>
+        <button class="wc-btn" bindtap="closeWordCardAndAdvance">下一题</button>
+      </view>
+    </view>
+  </view>
+</view>
