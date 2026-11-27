@@ -1,0 +1,128 @@
+<view class="page">
+  <!-- 底部 Boss 氛围装饰：暗角 + 怪兽眼睛 + 小星，纯 CSS 不拦截点击 -->
+  <view class="boss-deco">
+    <view class="bd-eye bd-eye-l"><view class="bd-pupil"></view></view>
+    <view class="bd-eye bd-eye-r"><view class="bd-pupil"></view></view>
+    <view class="bd-fang bd-fang-l"></view>
+    <view class="bd-fang bd-fang-r"></view>
+    <text class="bd-star bs-1">✦</text>
+    <text class="bd-star bs-2">✧</text>
+    <text class="bd-star bs-3">✦</text>
+    <view class="bd-ground"></view>
+  </view>
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="topbar">
+    <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{qIndex + 1}}/{{total}}</text></view>
+    <view class="stat-box"><text class="stat-label">已消灭</text><text class="stat-val kill">👾{{killed}}</text></view>
+  </view>
+
+  <view class="boss-banner">
+    <text class="boss-emoji">👾</text>
+    <text class="boss-title">Boss 战 · 高考真题高频</text>
+    <text class="boss-sub">专攻高考3500与真题高频词</text>
+  </view>
+
+  <!-- 题库三选一：切换立即重开一局 -->
+  <view class="bank-tabs">
+    <view class="bank-tab {{bankMode === item.key ? 'bank-tab-on' : ''}}"
+          wx:for="{{bankTabs}}" wx:key="key" data-mode="{{item.key}}" bindtap="switchBank">{{item.name}}</view>
+  </view>
+
+  <block wx:if="{{!gameOver && currentQ}}">
+    <!-- 选义题 -->
+    <block wx:if="{{currentQ.type === 'choice'}}">
+      <view class="question-card">
+        <view class="q-head">
+          <text class="q-label">击败这个 Boss：选出正确单词</text>
+          <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+        </view>
+        <text class="q-main">{{currentQ.q}}</text>
+      </view>
+      <view class="option-list">
+        <view class="option {{feedback && item.w === currentQ.answer ? 'opt-right' : ''}} {{feedback === 'wrong' && item.w === wrongPick ? 'opt-wrong' : ''}}"
+              wx:for="{{currentQ.options}}" wx:key="w" data-word="{{item.w}}" bindtap="tapOption">
+          <text class="opt-badge">{{optLabels[index]}}</text>
+          <text class="opt-text">{{item.w}}</text>
+          <text class="opt-mark" wx:if="{{feedback === 'wrong' && item.w === wrongPick}}">✕</text>
+          <text class="opt-mark" wx:elif="{{feedback && item.w === currentQ.answer}}">✓</text>
+        </view>
+      </view>
+    </block>
+    <!-- 拼写题 -->
+    <block wx:else>
+      <view class="question-card">
+        <view class="q-head">
+          <text class="q-label">击败这个 Boss：拼出单词</text>
+          <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+        </view>
+        <text class="q-main">{{currentQ.q}}</text>
+        <text class="q-phonetic" wx:if="{{currentQ.phonetic}}">/{{currentQ.phonetic}}/</text>
+      </view>
+      <view class="answer-box {{feedback}}">
+        <view class="answer-slot" wx:for="{{answer}}" wx:key="id" data-id="{{item.id}}" bindtap="tapAnswer">
+          <text class="answer-ch">{{item.ch}}</text>
+        </view>
+        <text class="answer-mark" wx:if="{{feedback === 'right'}}">✓</text>
+        <text class="answer-mark answer-mark-wrong" wx:elif="{{feedback === 'wrong'}}">✕</text>
+      </view>
+      <view class="letter-pool">
+        <view class="letter-btn {{item.used ? 'letter-used' : ''}}" wx:for="{{letters}}" wx:key="id" data-id="{{item.id}}" bindtap="tapLetter">
+          <text class="letter-ch">{{item.ch}}</text>
+        </view>
+      </view>
+    </block>
+    <!-- 答完反馈期：看词卡入口（不泄题，只在答完后短暂出现） -->
+    <view class="fb-actions" wx:if="{{feedback}}">
+      <view class="wc-open" bindtap="openWordCard">📖 看词卡</view>
+      <text class="fb-hint">看词卡会暂停自动跳</text>
+    </view>
+  </block>
+
+  <!-- 星际词卡弹层：复用答题页词卡，答完点「看词卡」进入 -->
+  <view class="wc-mask" wx:if="{{detailOpen}}" bindtap="closeWordCard">
+    <view class="wc-card" catchtap="noop">
+      <view class="wc-close" bindtap="closeWordCard">✕</view>
+      <view class="wc-planet wc-planet-a">🌟</view>
+      <view class="wc-planet wc-planet-b">✨</view>
+      <view class="wc-title">星际单词探险</view>
+      <view class="wc-word">{{detail.w}}</view>
+      <view class="wc-phonetic" wx:if="{{detail.p}}">/{{detail.p}}/</view>
+      <view class="wc-section">
+        <view class="wc-section-title">📖 释义</view>
+        <view class="wc-cn">{{detail.cn}}</view>
+        <view class="wc-en" wx:if="{{detail.en}}">{{detail.en}}</view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.collocations.length}}">
+        <view class="wc-section-title">📖 高考固定搭配</view>
+        <view class="wc-coll" wx:for="{{detail.collocations}}" wx:key="en">
+          <text class="wc-coll-i">{{index + 1}}.</text>
+          <view class="wc-coll-body">
+            <view class="wc-coll-en">{{item.en}}</view>
+            <view class="wc-coll-cn">{{item.cn}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.synonyms.length}}">
+        <view class="wc-section-title">🔁 同义替换</view>
+        <view class="wc-syns">
+          <text class="wc-syn" wx:for="{{detail.synonyms}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <view class="wc-source">{{detail.source}}</view>
+      <view class="wc-actions">
+        <button class="wc-btn ghost" bindtap="addDetailToWrong">{{detailSaved ? '已加入错词本' : '加入错词本'}}</button>
+        <button class="wc-btn" bindtap="closeWordCardAndAdvance">下一题</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">🏆</text>
+      <text class="result-title">Boss 战结束！</text>
+      <view class="killed-num">{{killed}}</view>
+      <text class="killed-label">个高频词被拿下</text>
+      <button class="btn-primary result-btn" bindtap="backHome">返回</button>
+    </view>
+  </view>
+</view>
