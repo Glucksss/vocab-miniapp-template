@@ -1,0 +1,157 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="head">
+    <text class="head-title">练习场</text>
+    <text class="head-sub">想练什么，直接点 · 正确率 {{accuracy}}%</text>
+  </view>
+
+  <!-- 第一层：唯一主操作，深空蓝三段渐变 + 装饰点缀 -->
+  <view class="hero">
+    <view class="hero-glow"></view>
+    <view class="hero-shine"></view>
+    <text class="hero-spark spark-1">✦</text>
+    <text class="hero-spark spark-2">✧</text>
+    <text class="hero-spark spark-3">✦</text>
+    <text class="hero-spark spark-4">✧</text>
+    <view class="hero-top">
+      <view class="hero-icon">
+        <view class="hm-mallet">
+          <view class="hm-mallet-handle"></view>
+          <view class="hm-mallet-head"><view class="hm-mallet-shine"></view></view>
+        </view>
+      </view>
+      <view class="hero-text">
+        <text class="hero-title">3 分钟速玩 · 打地鼠</text>
+        <text class="hero-desc">看中文敲英文，随手刷一关</text>
+      </view>
+      <view class="hero-go" bindtap="quickPlay">开始 →</view>
+    </view>
+    <!-- 底部三只地鼠排排坐：复用答题页地鼠脸（棕脸+粉鼻+耳朵），纯 CSS 不拦截点击 -->
+    <view class="hero-moles">
+      <view class="hm m1"><view class="hm-ear hm-ear-l"></view><view class="hm-ear hm-ear-r"></view><view class="hm-head"><view class="hm-eye hm-eye-l"></view><view class="hm-eye hm-eye-r"></view><view class="hm-nose"></view></view></view>
+      <view class="hm m2"><view class="hm-ear hm-ear-l"></view><view class="hm-ear hm-ear-r"></view><view class="hm-head"><view class="hm-eye hm-eye-l"></view><view class="hm-eye hm-eye-r"></view><view class="hm-nose"></view></view></view>
+      <view class="hm m3"><view class="hm-ear hm-ear-l"></view><view class="hm-ear hm-ear-r"></view><view class="hm-head"><view class="hm-eye hm-eye-l"></view><view class="hm-eye hm-eye-r"></view><view class="hm-nose"></view></view></view>
+    </view>
+  </view>
+
+  <!-- 每日能量加成：紧接打地鼠主卡下方，软额度 + 看视频扩容 -->
+  <view class="bonus-card">
+    <view class="bonus-info">
+      <view class="bonus-title-row">
+        <text class="bonus-title">⚡ 今日能量加成 {{bonus.used}}/{{bonus.quota}} 题</text>
+        <text class="bonus-help" bindtap="openBonusRule">?</text>
+      </view>
+      <text class="bonus-sub">只算答题 · 宝箱/喂食/补签另算</text>
+      <view class="bonus-track"><view class="bonus-fill" style="width: {{bonus.quota ? bonus.used * 100 / bonus.quota : 0}}%"></view></view>
+    </view>
+    <view class="bonus-btn {{bonus.expandLeft <= 0 ? 'bonus-btn-off' : ''}}" bindtap="expandBonus">
+      <text class="bonus-btn-icon">📺</text>
+      <text class="bonus-btn-label">{{bonus.expandLeft > 0 ? '看视频 +10 题' : '今日已满'}}</text>
+      <text class="bonus-btn-sub">{{bonus.expandLeft > 0 ? '剩 ' + bonus.expandLeft + '/5 次' : '明天再来'}}</text>
+    </view>
+  </view>
+
+  <!-- 第二层：两张同等专注卡 -->
+  <view class="section-title">挑战自我</view>
+  <view class="focus-row">
+    <view class="focus-card focus-timed" data-path="/pages/timed/timed" bindtap="openMode">
+      <view class="focus-icon">⚡</view>
+      <text class="focus-title">限时风暴</text>
+      <text class="focus-desc">60 秒刷高分，拼手速</text>
+      <text class="focus-gain">答对攒 ⚡能量</text>
+    </view>
+    <view class="focus-card focus-boss" data-path="/pages/boss/boss" bindtap="openMode">
+      <view class="focus-icon">👾</view>
+      <text class="focus-title">Boss 战</text>
+      <text class="focus-desc">{{wrongCount > 0 ? wrongCount + ' 个错词等你消灭' : '错词清空，来场挑战'}}</text>
+      <text class="focus-gain focus-gain-boss">答对攒 ⚡能量</text>
+    </view>
+  </view>
+
+  <!-- 第三层：其他玩法全部收进紧凑列表 -->
+  <view class="section-title">更多玩法</view>
+  <view class="list">
+    <view class="list-row list-map" bindtap="goChallenge">
+      <view class="list-icon">🗺️</view>
+      <view class="list-text">
+        <text class="list-title">地图闯关 · 五步流程</text>
+        <text class="list-desc">新学 → 练习 → 复习 → 宝箱 → 挑战</text>
+        <text class="list-gain list-gain-map">通关开箱得 🧩碎片 + 词卡</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row" bindtap="openSpell">
+      <view class="list-icon" style="background:#E1F5EE">✏️</view>
+      <view class="list-text">
+        <text class="list-title">单词拼图</text>
+        <text class="list-desc">拼对才过关</text>
+        <text class="list-gain">拼对攒 ⚡能量</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row list-recite" bindtap="openRecite">
+      <view class="list-icon">📖</view>
+      <view class="list-text">
+        <text class="list-title">安静模式背诵</text>
+        <text class="list-desc">翻转词卡 · 无计时无干扰</text>
+        <text class="list-gain">自评已会 · 不计时</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row" bindtap="openReview">
+      <view class="list-icon">🧠</view>
+      <view class="list-text">
+        <text class="list-title">遗忘曲线复习</text>
+        <text class="list-desc">{{dueCount > 0 ? '今日 ' + dueCount + ' 词待复习' : '今日已复习完'}}</text>
+        <text class="list-gain">答对攒 ⚡能量</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row" bindtap="openContext">
+      <view class="list-icon">🔍</view>
+      <view class="list-text">
+        <text class="list-title">语境辨析关</text>
+        <text class="list-desc">读英文释义选单词</text>
+        <text class="list-gain">答对攒 ⚡能量</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row" bindtap="openWrong">
+      <view class="list-icon list-icon-red">📕</view>
+      <view class="list-text">
+        <text class="list-title">错词本</text>
+        <text class="list-desc">{{wrongCount}} 个词待攻克</text>
+        <text class="list-gain">清剿三遍划掉错词</text>
+      </view>
+      <text class="list-arrow">›</text>
+    </view>
+    <view class="list-row list-soon" bindtap="comingSoon">
+      <view class="list-icon list-icon-soon">✨</view>
+      <view class="list-text">
+        <text class="list-title">敬请期待</text>
+        <text class="list-desc">更多好玩的玩法正在路上</text>
+      </view>
+      <text class="list-soon-tag">NEW</text>
+    </view>
+  </view>
+
+  <!-- 加成计入范围说明：点标题旁 ? 打开，纯说明不改数据 -->
+  <view class="rule-mask" wx:if="{{bonusRuleOpen}}" bindtap="closeBonusRule">
+    <view class="rule-dlg" catchtap="">
+      <text class="rule-title">今日能量加成 · 计入范围</text>
+      <view class="rule-sec">
+        <text class="rule-sec-title">✅ 计入额度：答对 +2</text>
+        <text class="rule-line">打地鼠 · 限时风暴 · Boss 战 · 地图答题</text>
+        <text class="rule-line">单词拼图 · 遗忘曲线复习 · 语境辨析关</text>
+        <text class="rule-line">错词清剿</text>
+      </view>
+      <view class="rule-sec rule-sec-no">
+        <text class="rule-sec-title">不占额度：各自单独结算</text>
+        <text class="rule-line">宝箱开箱奖励 · A/B/C 看视频翻倍</text>
+        <text class="rule-line">看广告补签 · 喂食 · 抽卡（消耗）</text>
+      </view>
+      <text class="rule-foot">额度用完照常 +1，不锁学习 · 成长值始终 +3</text>
+      <view class="rule-btn" bindtap="closeBonusRule">知道了</view>
+    </view>
+  </view>
+</view>
