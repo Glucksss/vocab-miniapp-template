@@ -1,0 +1,144 @@
+/* 外层：参考图顶部深蓝星空背景（纯 CSS 绘制，零包体） */
+.page { display: flex; flex-direction: column; height: 100vh; background: radial-gradient(circle at 10% 6%, rgba(255,255,255,.8) 0 2rpx, transparent 3rpx), radial-gradient(circle at 68% 5%, rgba(255,255,255,.65) 0 2rpx, transparent 3rpx), radial-gradient(circle at 32% 14%, rgba(255,255,255,.45) 0 1rpx, transparent 2rpx), linear-gradient(180deg, #0B1230 0%, #0E1638 45%, #16224F 100%); }
+
+/* 顶部标题栏：深蓝星空上的金色大字 */
+.sky-head { position: relative; flex-shrink: 0; background: transparent; padding: 34rpx 30rpx 24rpx; text-align: center; }
+.sky-title { position: relative; z-index: 2; font-size: 42rpx; font-weight: 800; color: #F5CE6A; text-shadow: 0 3rpx 10rpx rgba(0,0,0,.55), 0 1rpx 0 #8A5A12; letter-spacing: 2rpx; }
+.sky-sub { position: relative; z-index: 2; margin-top: 10rpx; font-size: 24rpx; color: #D8D2F0; letter-spacing: 1rpx; }
+/* 标题两侧星点装饰：绝对定位，透明底不遮地图背景 */
+.sky-star { position: absolute; color: #F5D77A; text-shadow: 0 2rpx 6rpx rgba(0,0,0,.4); z-index: 1; }
+.sky-star-1 { top: 30rpx; left: 14%; font-size: 26rpx; }
+.sky-star-2 { top: 52rpx; left: 27%; font-size: 18rpx; color: #C9B6FF; }
+.sky-star-3 { top: 52rpx; right: 27%; font-size: 18rpx; color: #C9B6FF; }
+.sky-star-4 { top: 30rpx; right: 14%; font-size: 26rpx; }
+.sky-star-5 { top: 62rpx; left: 8%; font-size: 15rpx; color: #C9B6FF; }
+.sky-star-6 { top: 74rpx; right: 8%; font-size: 17rpx; }
+.sky-star-7 { bottom: 8rpx; left: 22%; font-size: 14rpx; color: #C9B6FF; }
+.sky-star-8 { bottom: 14rpx; right: 20%; font-size: 16rpx; }
+/* 飞碟：标题右上，纯 CSS 拼装，z-index 0 不压标题 */
+.sky-ufo { position: absolute; top: 24rpx; right: 6%; width: 88rpx; height: 60rpx; z-index: 1; transform: rotate(-10deg); }
+.sky-ufo-body { position: absolute; left: 4rpx; top: 20rpx; width: 80rpx; height: 22rpx; background: linear-gradient(180deg,#D9D2F5,#9A8FD6); border: 2rpx solid #F0ECFF; border-radius: 50%; box-shadow: 0 6rpx 12rpx rgba(0,0,0,.4); }
+.sky-ufo-dome { position: absolute; left: 26rpx; top: 4rpx; width: 36rpx; height: 22rpx; background: linear-gradient(180deg,#CDEBFF,#6FA8D8); border: 2rpx solid #EAF6FF; border-radius: 20rpx 20rpx 0 0; }
+.sky-ufo-light { position: absolute; top: 34rpx; width: 8rpx; height: 8rpx; border-radius: 50%; background: #FFE08A; box-shadow: 0 0 10rpx #FFD36A; }
+.sky-ufo-light-1 { left: 16rpx; }
+.sky-ufo-light-2 { left: 40rpx; }
+.sky-ufo-light-3 { left: 64rpx; }
+.sky-ufo-beam { position: absolute; left: 30rpx; top: 40rpx; width: 0; height: 0; border-left: 26rpx solid transparent; border-right: 26rpx solid transparent; border-top: 38rpx solid rgba(180,200,255,.18); }
+
+/* 顶部信息条：左进度 / 中进度条 / 右星数 */
+.info-bar { flex-shrink: 0; display: flex; align-items: center; gap: 24rpx; background: #FFF6DF; padding: 16rpx 32rpx; border-bottom: 2rpx solid #EBD6A4; }
+.info-left { display: flex; flex-direction: column; flex-shrink: 0; }
+.info-label { font-size: 19rpx; color: #B08A4A; }
+.info-level { font-size: 30rpx; font-weight: 800; color: #C87A18; line-height: 1.2; }
+.info-count { font-size: 19rpx; color: #9A7740; margin-top: 2rpx; }
+.info-mid { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.prog-track { height: 16rpx; background: #EAD3A0; border-radius: 999rpx; overflow: hidden; }
+.prog-fill { height: 100%; background: linear-gradient(90deg, #F7B84C, #F08A22); border-radius: 999rpx; transition: width 0.4s ease; }
+.prog-label { font-size: 18rpx; color: #A8844C; margin-top: 8rpx; text-align: center; }
+.info-right { flex-shrink: 0; }
+.info-star { font-size: 24rpx; font-weight: 700; color: #E09A22; white-space: nowrap; }
+
+/* 可滚动地图：深蓝渐变底跟着内容走，越往下越淡，滚到哪都有背景不露灰白 */
+.map-scroll { flex: 1; width: 100%; background: radial-gradient(circle at 12% 8%, rgba(255,226,138,.9) 0 2rpx, transparent 3rpx), radial-gradient(circle at 82% 14%, rgba(201,182,255,.8) 0 2rpx, transparent 3rpx), radial-gradient(circle at 62% 4%, rgba(255,255,255,.7) 0 1rpx, transparent 2rpx), radial-gradient(circle at 30% 20%, rgba(255,226,138,.7) 0 1rpx, transparent 2rpx), radial-gradient(circle at 90% 30%, rgba(255,255,255,.6) 0 1rpx, transparent 2rpx), linear-gradient(180deg, #0E1638 0%, #16224F 45%, #243468 100%); }
+/* 深蓝画框：四周留白露出渐变底，关卡图真实变窄（不用 transform，避免底部留空） */
+.map-frame { padding: 28rpx 30rpx 40rpx; box-sizing: border-box; width: 100%; background: linear-gradient(180deg, #0E1638 0%, #16224F 45%, #243468 100%); }
+.map-canvas { position: relative; width: 100%; }
+.map-bg { position: relative; left: 0; top: 0; width: 100%; z-index: 0; display: block; border-radius: 28rpx; box-shadow: 0 12rpx 40rpx rgba(0,0,0,.5); }
+
+/* 宝箱球：4 个，卡在两卡片中间的橙线上，按档位配色 */
+.chest-ball { position: absolute; z-index: 5; transform: translate(-50%, -50%); width: 96rpx; height: 96rpx; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #FFEFC0, #F5B23C 62%, #D98A1C); border: 4rpx solid #FFF8E4; box-shadow: 0 6rpx 14rpx #8A5A1266, inset 0 -5rpx 10rpx #A85C1255; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.cb-icon { font-size: 36rpx; line-height: 1; }
+.cb-label { font-size: 15rpx; font-weight: 700; color: #8A4A12; margin-top: 2rpx; }
+.cb-lv1 { background: radial-gradient(circle at 34% 28%, #F0DCBE, #C89A62 62%, #9A6B3C); }
+.cb-lv2 { background: radial-gradient(circle at 34% 28%, #F0F6FA, #B0C4D6 62%, #7C96AE); box-shadow: 0 6rpx 16rpx #5A708ACC, inset 0 -5rpx 10rpx #4A607055; }
+.cb-lv2 .cb-label { color: #3C5A74; }
+.cb-lv3 { background: radial-gradient(circle at 34% 28%, #FFF3C4, #EFC147 62%, #C68F1E); box-shadow: 0 6rpx 18rpx #B8861ACC, inset 0 -5rpx 10rpx #8A621055; }
+.cb-lv3 .cb-label { color: #8A5E0E; }
+.cb-lv4 { background: radial-gradient(circle at 34% 28%, #F6E0FF, #C77EE8 62%, #9B4DC4); box-shadow: 0 6rpx 18rpx #9B4DC4CC, inset 0 -5rpx 10rpx #6A2F8A55; }
+.cb-lv4 .cb-label { color: #6A2F8A; }
+
+/* 线头终极宝箱：最大最闪，三态配色 */
+.ultimate-ball { position: absolute; z-index: 6; transform: translate(-50%, -50%); width: 96rpx; height: 96rpx; border-radius: 50%; border: 4rpx solid #FFF8E4; box-shadow: 0 6rpx 14rpx rgba(0,0,0,.5), inset 0 -5rpx 10rpx rgba(0,0,0,.2); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.ub-icon { font-size: 36rpx; line-height: 1; }
+.ub-label { font-size: 15rpx; font-weight: 800; margin-top: 2rpx; }
+.ub-locked { background: radial-gradient(circle at 34% 28%, #E8E2D2, #A89C82 62%, #746A52); filter: grayscale(.35); }
+.ub-locked .ub-label { color: #FFF6E0; }
+.ub-ready { background: radial-gradient(circle at 34% 28%, #FFF7D0, #FFC93C 58%, #E68A12); box-shadow: 0 0 0 6rpx rgba(255,201,60,.28), 0 8rpx 22rpx rgba(200,120,10,.6); animation: ubPulse 1.6s ease-in-out infinite; }
+.ub-ready .ub-label { color: #8A4A0E; }
+.ub-done { background: radial-gradient(circle at 34% 28%, #F6E0FF, #C77EE8 62%, #9B4DC4); }
+.ub-done .ub-label { color: #FFF4FF; }
+@keyframes ubPulse { 0%, 100% { transform: translate(-50%, -50%) scale(1); } 50% { transform: translate(-50%, -50%) scale(1.05); } }
+
+/* 米黄关卡卡片 */
+.lv-card { position: absolute; z-index: 3; transform: translateY(-50%); display: flex; flex-direction: row; align-items: center; width: 400rpx; background: linear-gradient(180deg, #FFFBEC, #FFF0CC); border: 3rpx solid #E8B863; border-radius: 28rpx; padding: 18rpx 20rpx; box-shadow: 0 10rpx 20rpx #8A5A1244, inset 0 2rpx 4rpx #FFFFFFCC; }
+.lv-card.card-left { left: 40rpx; }
+.lv-card.card-right { right: 40rpx; }
+.card-badge { flex-shrink: 0; width: 84rpx; height: 84rpx; margin-right: 18rpx; border-radius: 50%; background: radial-gradient(circle at 34% 28%, #FFE3A0, #F5A73A 62%, #D98322); border: 3rpx solid #FFF6DC; box-shadow: 0 4rpx 8rpx #8A5A1255; display: flex; align-items: center; justify-content: center; font-size: 42rpx; }
+.card-body { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.card-title { font-size: 27rpx; font-weight: 800; color: #7A4A12; line-height: 1.25; }
+.card-words { margin-top: 4rpx; font-size: 20rpx; color: #A87838; }
+.card-progress { margin-top: 10rpx; width: 100%; height: 12rpx; background: #EBD6A4; border-radius: 999rpx; overflow: hidden; }
+.card-progress-fill { height: 100%; background: linear-gradient(90deg, #F7B84C, #F08A22); border-radius: 999rpx; }
+.card-btn { margin-top: 14rpx; align-self: flex-start; background: linear-gradient(180deg, #FFC65C, #F2912A); color: #fff; font-size: 22rpx; font-weight: 700; padding: 10rpx 26rpx; border-radius: 999rpx; box-shadow: 0 4rpx 0 #D0741C, 0 6rpx 10rpx #8A5A1244; }
+
+/* BOSS 卡片：红色系 */
+.card-boss { background: linear-gradient(180deg, #FFF0EC, #FFDCD2); border-color: #E89A86; }
+.card-boss .card-badge { background: radial-gradient(circle at 34% 28%, #FFC9C0, #E85B4E 62%, #B83328); }
+.card-boss .card-title { color: #A83224; }
+.card-boss .card-btn { background: linear-gradient(180deg, #FF8A72, #E5452E); box-shadow: 0 4rpx 0 #B82E1E, 0 6rpx 10rpx #8A2A1244; }
+
+/* 软锁视觉标记：当前主线关高亮，未到的关置灰但可点（不拦截） */
+.card-current { border-color: #FF9A2E; box-shadow: 0 0 0 6rpx #FFB84C55, 0 10rpx 22rpx #8A5A1255, inset 0 2rpx 4rpx #FFFFFFCC; }
+.card-freepractice { filter: saturate(0.55); opacity: 0.82; }
+.card-btn-free { background: linear-gradient(180deg,#D9C9A8,#C4AC7E); box-shadow: 0 4rpx 0 #AB9369, 0 6rpx 10rpx #8A5A1233; }
+
+/* 宝箱两态弹窗：橙色渐变标题 + 米白卡 + 三按钮（仿参考图） */
+.chest-mask { position: fixed; inset: 0; background: rgba(10,14,40,.72); display: flex; align-items: center; justify-content: center; z-index: 90; padding: 40rpx; }
+.chest-dlg { width: 100%; max-width: 620rpx; border-radius: 36rpx; overflow: hidden; box-shadow: 0 24rpx 70rpx rgba(0,0,0,.5); }
+.cd-head { padding: 46rpx 30rpx 40rpx; text-align: center; background: linear-gradient(180deg, #FF9A3C, #F2721C); position: relative; }
+.cd-head::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1rpx; height: 40rpx; background: #FFF6E6; border-radius: 40rpx 40rpx 0 0; }
+.cd-head-lose { background: linear-gradient(180deg, #8C93B8, #5F668C); }
+.cd-title { position: relative; z-index: 1; font-size: 52rpx; font-weight: 900; color: #FFF9E8; text-shadow: 0 4rpx 0 #C4551A, 0 6rpx 16rpx rgba(0,0,0,.3); letter-spacing: 3rpx; }
+.cd-head-lose .cd-title { text-shadow: 0 4rpx 0 #3A4062, 0 6rpx 16rpx rgba(0,0,0,.3); }
+.cd-body { background: #FFF6E6; padding: 8rpx 32rpx 40rpx; }
+.cd-rows { background: #FFFDF6; border-radius: 24rpx; padding: 24rpx 28rpx; box-shadow: inset 0 0 0 2rpx #F0DDB0; }
+.cd-row { display: flex; align-items: center; margin: 12rpx 0; }
+.cd-row-icon { width: 68rpx; height: 68rpx; border-radius: 50%; background: linear-gradient(135deg, #FFE9B0, #F7C65C); display: flex; align-items: center; justify-content: center; font-size: 38rpx; flex-shrink: 0; box-shadow: inset 0 -3rpx 6rpx #D99A24; }
+.cd-row-text { margin-left: 22rpx; font-size: 28rpx; font-weight: 700; color: #7A4A12; line-height: 1.4; }
+.cd-btns { display: flex; gap: 16rpx; margin-top: 36rpx; }
+.cd-btn { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 20rpx 8rpx; border-radius: 22rpx; }
+.cd-btn-a { background: linear-gradient(180deg, #FFE7B4, #FBD187); box-shadow: 0 6rpx 0 #E0AE52; }
+.cd-btn-b { background: linear-gradient(180deg, #BBD6F5, #96BCE8); box-shadow: 0 6rpx 0 #6E96C6; }
+.cd-btn-c { background: linear-gradient(180deg, #C6EAD9, #99D5BA); box-shadow: 0 6rpx 0 #63AE8C; }
+.cd-btn-icon { font-size: 52rpx; line-height: 1.1; }
+.cd-btn-label { margin-top: 12rpx; font-size: 25rpx; font-weight: 800; color: #5A3E18; }
+.cd-btn-b .cd-btn-label { color: #274B78; }
+.cd-btn-c .cd-btn-label { color: #1E5E46; }
+.cd-ad-btn { background: linear-gradient(180deg, #FFE08A, #FFB347); box-shadow: 0 6rpx 0 #DE8B27; }
+.cd-ad-btn .cd-btn-label { color: #7A3B00; }
+.cd-ad-done { background: linear-gradient(180deg, #D4F3DF, #A8DFBB); box-shadow: 0 6rpx 0 #6FB88A; }
+.cd-ad-done .cd-btn-label { color: #256B45; }
+
+/* 册次选择器 · 地图页专属深空玻璃配色（.map-vol 作用域，不影响首页/练习页） */
+.map-vol .vol-trigger { background: rgba(120,150,230,.14); border: 2rpx solid #4A6099; box-shadow: 0 6rpx 18rpx rgba(0,0,0,.28); }
+.map-vol .vol-trigger-icon { background: rgba(180,200,255,.20); }
+.map-vol .vol-trigger-cap { color: #AFC0E8; }
+.map-vol .vol-trigger-name { color: #F5D77A; }
+.map-vol .vol-caret { border-right-color: #AFC0E8; border-bottom-color: #AFC0E8; }
+/* 册次条右侧深空点缀：两颗小星，金色+淡蓝，不拦截点击 */
+.map-vol .vol-trigger-right { gap: 12rpx; }
+.map-vol .vol-deco { font-size: 22rpx; line-height: 1; pointer-events: none; }
+.map-vol .vol-deco-a { color: #F5D77A; opacity: .9; }
+.map-vol .vol-deco-b { color: #AFC0E8; font-size: 18rpx; opacity: .8; }
+/* 小行星：纯 CSS 球体+光环，不用 emoji 避免应用卡字体方框 */
+.map-vol .vol-planet { position: relative; width: 20rpx; height: 20rpx; border-radius: 50%; background: radial-gradient(circle at 34% 30%, #FFF3C4 0%, #F5D77A 46%, #C99B3E 100%); box-shadow: 0 0 10rpx rgba(245,215,122,.5); flex-shrink: 0; pointer-events: none; }
+.map-vol .vol-planet::after { content: ''; position: absolute; left: -9rpx; top: 6rpx; width: 38rpx; height: 9rpx; border: 2rpx solid rgba(245,215,122,.75); border-radius: 50%; transform: rotate(-24deg); box-sizing: border-box; }
+/* 展开面板也用深空玻璃，避免点开还是白面板 */
+.map-vol .vol-panel { background: #1B2650; border: 2rpx solid #4A6099; box-shadow: 0 16rpx 40rpx rgba(0,0,0,.5); }
+.map-vol .vol-group-head { border-bottom-color: #34406E; }
+.map-vol .vol-group-title { color: #F5D77A; }
+.map-vol .vol-group-hint { color: #9FAEDC; }
+.map-vol .vol-opt { background: rgba(180,200,255,.10); border-color: #3A4A82; color: #D6DEF5; }
+.map-vol .vol-opt-on { background: #F5D77A; border-color: #F5D77A; color: #1B1442; }
+.map-vol .vol-opt-sp { background: rgba(245,215,122,.14); border-color: #B89346; color: #F5D77A; }
+.map-vol .vol-opt-sp.vol-opt-on { background: #F5D77A; border-color: #F5D77A; color: #1B1442; }
