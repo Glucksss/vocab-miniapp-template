@@ -1,0 +1,67 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/game/game",
+    "pages/spell/spell",
+    "pages/timed/timed",
+    "pages/boss/boss",
+    "pages/clean/clean",
+    "pages/wrong/wrong",
+    "pages/review/review",
+    "pages/achieve/achieve",
+    "pages/context/context",
+    "pages/cards/cards",
+    "pages/pet/pet",
+    "pages/map/map",
+    "pages/chapter/chapter",
+    "pages/practice/practice",
+    "pages/treasure/treasure",
+    "pages/recite/recite"
+  ],
+  "tabBar": {
+    "color": "#8A8F99",
+    "selectedColor": "#534AB7",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "black",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "闯关", "iconPath": "images/tab/tab_map.png", "selectedIconPath": "images/tab/tab_map_on.png" },
+      { "pagePath": "pages/practice/practice", "text": "练习", "iconPath": "images/tab/tab_practice.png", "selectedIconPath": "images/tab/tab_practice_on.png" },
+      { "pagePath": "pages/treasure/treasure", "text": "宝箱", "iconPath": "images/tab/tab_chest.png", "selectedIconPath": "images/tab/tab_chest_on.png" },
+      { "pagePath": "pages/pet/pet", "text": "我的", "iconPath": "images/tab/tab_mine.png", "selectedIconPath": "images/tab/tab_mine_on.png" }
+    ]
+  },
+  "subPackages": [
+    {
+      "root": "pkgWordA",
+      "name": "vocabA",
+      "pages": ["load"]
+    },
+    {
+      "root": "pkgWordB",
+      "name": "vocabB",
+      "pages": ["load"]
+    }
+  ],
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.6",
+      "provider": "wx069ba97219f66d99"
+    }
+  },
+  "preloadRule": {
+    "pages/index/index": {
+      "network": "all",
+      "packages": ["vocabA", "vocabB"]
+    }
+  },
+  "window": {
+    "navigationBarTitleText": "单词闯关",
+    "navigationBarBackgroundColor": "#5B4BD6",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F4F2FF",
+    "backgroundTextStyle": "light"
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
