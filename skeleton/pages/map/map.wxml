@@ -1,0 +1,206 @@
+<view class="page">
+  <!-- 顶部标题栏 -->
+  <view class="sky-head">
+    <text class="sky-star sky-star-1">✦</text>
+    <text class="sky-star sky-star-2">✧</text>
+    <!-- 飞碟：标题右上，纯 CSS 拼装，不压标题字 -->
+    <view class="sky-ufo">
+      <view class="sky-ufo-beam"></view>
+      <view class="sky-ufo-dome"></view>
+      <view class="sky-ufo-body"></view>
+      <view class="sky-ufo-light sky-ufo-light-1"></view>
+      <view class="sky-ufo-light sky-ufo-light-2"></view>
+      <view class="sky-ufo-light sky-ufo-light-3"></view>
+    </view>
+    <view class="sky-title">🗺️ 单词大闯关</view>
+    <text class="sky-star sky-star-3">✧</text>
+    <text class="sky-star sky-star-4">✦</text>
+    <text class="sky-star sky-star-5">✧</text>
+    <text class="sky-star sky-star-6">✦</text>
+    <text class="sky-star sky-star-7">✧</text>
+    <text class="sky-star sky-star-8">✦</text>
+    <view class="sky-sub">{{volName}} · {{subtitle}}</view>
+  </view>
+
+
+  <!-- 顶部信息条：整本进度 -->
+  <view class="info-bar">
+    <view class="info-left">
+      <text class="info-label">学习进度</text>
+      <text class="info-level">已通关 {{cleared}}</text>
+      <text class="info-count">{{unitCount}} 单元 · {{wordTotal}} 词</text>
+    </view>
+    <view class="info-mid">
+      <view class="prog-track">
+        <view class="prog-fill" style="width:{{progress}}%"></view>
+      </view>
+      <text class="prog-label">{{progress}}% · {{cleared}}/{{total}} 关</text>
+    </view>
+    <view class="info-right">
+      <text class="info-star">⭐ {{earned}}/{{maxStars}}</text>
+    </view>
+  </view>
+
+  <!-- 册次选择器：点开选册次，立即重绘地图（移自首页，首页已不再放） -->
+  <view class="vol-dropdown map-vol">
+    <view class="vol-mask" wx:if="{{volOpen}}" bindtap="closeVolMenu"></view>
+    <view class="vol-trigger" bindtap="toggleVolMenu">
+      <view class="vol-trigger-left">
+        <view class="vol-trigger-icon">📖</view>
+        <view class="vol-trigger-text">
+          <text class="vol-trigger-cap">点击切换册次</text>
+          <text class="vol-trigger-name">{{volumes[activeVol-1].name}} · 4 单元</text>
+        </view>
+      </view>
+      <view class="vol-trigger-right">
+        <text class="vol-deco vol-deco-a">✦</text>
+        <view class="vol-planet"></view>
+        <text class="vol-deco vol-deco-b">✧</text>
+        <view class="vol-caret {{volOpen ? 'vol-caret-open' : ''}}"></view>
+      </view>
+    </view>
+    <view class="vol-panel" wx:if="{{volOpen}}">
+      <view class="vol-group" wx:for="{{volGroups}}" wx:key="title" wx:for-item="g">
+        <view class="vol-group-head"><text class="vol-group-title">{{g.title}}</text><text class="vol-group-hint">{{g.hint}}</text></view>
+        <view class="vol-group-items">
+          <view class="vol-opt {{activeVol === sub.v ? 'vol-opt-on' : ''}} {{sub.special ? 'vol-opt-sp' : ''}}" wx:for="{{g.items}}" wx:key="v" wx:for-item="sub" data-v="{{sub.v}}" bindtap="switchVol">
+            <text class="vol-opt-name">{{sub.name}}</text><text class="vol-opt-check" wx:if="{{activeVol === sub.v}}">✓</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 蜿蜒地图：深蓝画框包住缩小的浅色关卡图 -->
+  <scroll-view class="map-scroll" scroll-y>
+    <view class="map-frame">
+    <view class="map-canvas">
+      <!-- 单张浅色卡通背景：橙色路径已画进图里 -->
+      <image class="map-bg" src="/images/map/map_path_light.webp" mode="widthFix"></image>
+
+      <!-- 4 个宝箱球：卡在两卡片中间的橙线上，点进去闯关拿对应档位宝箱 -->
+      <view class="chest-ball cb-lv{{item.tier}}"
+            wx:for="{{chestBalls}}" wx:key="tier"
+            style="left: {{item.left}}rpx; top: {{item.top}}rpx"
+            data-unit="{{item.unit}}" bindtap="openChest">
+        <text class="cb-icon">{{item.icon}}</text>
+        <text class="cb-label">{{item.label}}</text>
+      </view>
+
+      <!-- 线头终极宝箱：BOSS 满星解锁，点此开箱领毕业礼 -->
+      <view class="ultimate-ball {{ultimateBall.claimed ? 'ub-done' : (ultimateBall.qualified ? 'ub-ready' : 'ub-locked')}}"
+            wx:if="{{ultimateBall}}"
+            style="left: {{ultimateBall.left}}rpx; top: {{ultimateBall.top}}rpx"
+            bindtap="openUltimate">
+        <text class="ub-icon">🏆</text>
+        <text class="ub-label">{{ultimateBall.claimed ? '已毕业' : (ultimateBall.qualified ? '开箱' : '终极箱')}}</text>
+      </view>
+
+      <!-- 参考图式米黄关卡卡片：点击进入章节流程（软锁：全部可点，仅视觉标记） -->
+      <view class="lv-card {{item.side}} {{item.boss ? 'card-boss' : ''}} {{item.current ? 'card-current' : ''}} {{!item.boss && !item.current && !item.allCleared ? 'card-freepractice' : ''}}"
+            wx:for="{{cards}}" wx:key="no"
+            style="top: {{item.top}}rpx"
+            data-unit="{{item.unit}}" bindtap="openUnit">
+        <view class="card-badge">{{item.badge}}</view>
+        <view class="card-body">
+          <view class="card-title">第{{item.no}}关 · {{item.name}}</view>
+          <view class="card-words" wx:if="{{!item.boss}}">{{item.words}} 词 · ⭐ {{item.stars}}/{{item.max}}</view>
+          <view class="card-words" wx:else>语境辨析 · 综合挑战</view>
+          <view class="card-progress" wx:if="{{!item.boss}}">
+            <view class="card-progress-fill" style="width: {{item.pct}}%"></view>
+          </view>
+          <!-- 软锁状态标记：当前关/已通关/自由练（都不拦截点击） -->
+          <view class="card-btn" wx:if="{{item.current}}">▶ 继续闯关</view>
+          <view class="card-btn" wx:elif="{{item.allCleared}}">✓ 再练一次</view>
+          <view class="card-btn card-btn-free" wx:elif="{{!item.boss}}">🔒 自由练</view>
+          <view class="card-btn" wx:else>开始挑战 →</view>
+        </view>
+      </view>
+    </view>
+    </view>
+  </scroll-view>
+
+  <!-- 宝箱球两态弹窗：闯关成功(已得奖励) / 闯关未成功(神秘礼物预告) -->
+  <view class="chest-mask" wx:if="{{showChest && chestDlg}}" bindtap="closeChest">
+    <view class="chest-dlg" catchtap="">
+      <view class="cd-head {{chestDlg.win ? '' : 'cd-head-lose'}}">
+        <text class="cd-title">{{chestDlg.title}}</text>
+      </view>
+      <view class="cd-body">
+        <view class="cd-rows">
+          <view class="cd-row" wx:for="{{chestDlg.rows}}" wx:key="text">
+            <view class="cd-row-icon">{{item.icon}}</view>
+            <text class="cd-row-text">{{item.text}}</text>
+          </view>
+        </view>
+        <view class="cd-btns">
+          <view class="cd-btn cd-btn-a" bindtap="chestGoBattle">
+            <view class="cd-btn-icon">{{chestDlg.win ? '⚔️' : '🚀'}}</view>
+            <text class="cd-btn-label">{{chestDlg.win ? '继续闯关' : '去闯关'}}</text>
+          </view>
+          <view class="cd-btn cd-btn-b" bindtap="chestGoCards">
+            <view class="cd-btn-icon">🃏</view>
+            <text class="cd-btn-label">查看词卡</text>
+          </view>
+          <view class="cd-btn cd-btn-c" bindtap="closeChest">
+            <view class="cd-btn-icon">🗺️</view>
+            <text class="cd-btn-label">回到地图</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 线头终极宝箱弹窗：锁定 / 已解锁待开 / 开箱成功 / 回看 四态 -->
+  <view class="chest-mask" wx:if="{{showUltimate && ultimateDlg}}">
+    <view class="chest-dlg" catchtap="">
+      <view class="cd-head {{ultimateDlg.win ? '' : 'cd-head-lose'}}">
+        <text class="cd-title">{{ultimateDlg.title}}</text>
+      </view>
+      <view class="cd-body">
+        <view class="cd-rows">
+          <view class="cd-row" wx:for="{{ultimateDlg.rows}}" wx:key="text">
+            <view class="cd-row-icon">{{item.icon}}</view>
+            <text class="cd-row-text">{{item.text}}</text>
+          </view>
+        </view>
+        <view class="cd-btns">
+          <!-- 未解锁：去打 BOSS 关 -->
+          <view wx:if="{{ultimateDlg.state === 'locked'}}" class="cd-btn cd-btn-a" bindtap="ultimateGoBattle">
+            <view class="cd-btn-icon">⚔️</view>
+            <text class="cd-btn-label">去打BOSS关</text>
+          </view>
+          <!-- 已解锁待开：真正开箱 -->
+          <view wx:elif="{{ultimateDlg.state === 'ready'}}" class="cd-btn cd-btn-a" bindtap="claimUltimateChest">
+            <view class="cd-btn-icon">🎁</view>
+            <text class="cd-btn-label">开箱领取</text>
+          </view>
+          <!-- 开箱成功：看视频能量翻倍 + 去宠物页穿戴 -->
+          <block wx:elif="{{ultimateDlg.state === 'opened'}}">
+            <view wx:if="{{!ultimateDoubled}}" class="cd-btn cd-ad-btn" bindtap="doubleUltimateByAd">
+              <view class="cd-btn-icon">📺</view>
+              <text class="cd-btn-label">能量翻倍</text>
+            </view>
+            <view wx:else class="cd-btn cd-ad-done">
+              <view class="cd-btn-icon">✅</view>
+              <text class="cd-btn-label">已翻倍</text>
+            </view>
+            <view class="cd-btn cd-btn-a" bindtap="ultimateGoPet">
+              <view class="cd-btn-icon">👑</view>
+              <text class="cd-btn-label">去穿戴</text>
+            </view>
+          </block>
+          <!-- 已领取回看：查看词卡 -->
+          <view wx:else class="cd-btn cd-btn-a" bindtap="ultimateGoCards">
+            <view class="cd-btn-icon">🃏</view>
+            <text class="cd-btn-label">查看词卡</text>
+          </view>
+          <view class="cd-btn cd-btn-b" bindtap="closeUltimate">
+            <view class="cd-btn-icon">🗺️</view>
+            <text class="cd-btn-label">回到地图</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
