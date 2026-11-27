@@ -1,0 +1,80 @@
+page {
+  min-height: 100%;
+  background: #F4F2FF;
+  color: #2B2456;
+  font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", sans-serif;
+}
+
+button {
+  border-radius: 999rpx;
+  border: none;
+}
+
+button::after {
+  border: none;
+}
+
+/* 通用游戏卡片 */
+.card {
+  background: #FFFFFF;
+  border-radius: 28rpx;
+  box-shadow: 0 8rpx 30rpx rgba(91, 75, 214, 0.10);
+}
+
+/* 主按钮 */
+.btn-primary {
+  background: linear-gradient(135deg, #7B6BF0, #5B4BD6);
+  color: #FFFFFF;
+  font-weight: 700;
+  box-shadow: 0 8rpx 20rpx rgba(91, 75, 214, 0.30);
+}
+
+.btn-primary:active {
+  transform: scale(0.96);
+}
+
+/* 题干行：文字 + 喇叭 */
+.q-head { display: flex; align-items: center; justify-content: space-between; }
+
+/* 朗读喇叭按钮 */
+.speak-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 64rpx; height: 64rpx; border-radius: 50%;
+  background: #EFECFF; color: #5B4BD6;
+  font-size: 34rpx; line-height: 1;
+  margin-left: 12rpx;
+}
+.speak-btn:active { transform: scale(0.9); background: #E4DFFF; }
+
+/* 星星色 */
+.star-on { color: #FFB020; }
+.star-off { color: #E3E0F0; }
+
+/* ===== 共享册次选择器（打地鼠 / 单词拼图 / 大地图）=====
+   薰衣草紫系：白底紫边胶囊 + 深紫字，与宠物卡/紫背景同色系；
+   大地图金色信息条在前，紫色胶囊能明显区分开。 */
+.vol-dropdown { position: relative; z-index: 30; margin: 16rpx 0 10rpx; }
+.vol-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: transparent; z-index: 1; }
+.vol-trigger { position: relative; z-index: 2; display: flex; align-items: center; justify-content: space-between; padding: 14rpx 18rpx; border-radius: 18rpx; background: #FFFFFF; border: 2rpx solid #D6CCF5; box-shadow: 0 6rpx 16rpx rgba(107,91,168,.16); }
+.vol-trigger-left { display: flex; align-items: center; gap: 14rpx; }
+.vol-trigger-icon { width: 52rpx; height: 52rpx; border-radius: 14rpx; background: #EFECFF; display: flex; align-items: center; justify-content: center; font-size: 28rpx; flex-shrink: 0; }
+.vol-trigger-text { display: flex; flex-direction: column; }
+.vol-trigger-cap { font-size: 18rpx; color: #9A8BBE; }
+.vol-trigger-name { font-size: 25rpx; font-weight: 800; color: #4A3B8C; margin-top: 2rpx; }
+.vol-trigger-right { display: flex; align-items: center; }
+.vol-caret { width: 14rpx; height: 14rpx; border-right: 3rpx solid #7B6BD4; border-bottom: 3rpx solid #7B6BD4; transform: translateY(4rpx) rotate(45deg); transition: transform 0.2s; }
+.vol-caret-open { transform: translateY(-2rpx) rotate(225deg); }
+.vol-panel { position: absolute; left: 0; right: 0; top: 96rpx; background: #FFF; border-radius: 20rpx; border: 1rpx solid #E6E2FA; box-shadow: 0 16rpx 40rpx rgba(43,36,86,0.24); padding: 8rpx 18rpx 18rpx; z-index: 20; }
+.vol-group { margin-top: 12rpx; }
+.vol-group-head { display: flex; align-items: baseline; gap: 12rpx; padding: 6rpx 8rpx 10rpx; border-bottom: 1rpx solid #F0EEFA; flex-wrap: wrap; }
+.vol-group-title { font-size: 23rpx; font-weight: 800; color: #5B4BD6; }
+.vol-group-hint { font-size: 18rpx; color: #AAA6C2; }
+.vol-group-items { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 12rpx; }
+.vol-opt { display: flex; align-items: center; gap: 6rpx; padding: 12rpx 18rpx; border-radius: 999rpx; background: #F6F5FC; border: 1rpx solid #EDEBF8; font-size: 21rpx; color: #6B6692; }
+.vol-opt-on { background: #7B6BD4; border-color: #7B6BD4; color: #FFF; font-weight: 700; }
+.vol-opt-sp { background: #F0EDFF; border-color: #D6CCF5; color: #5B4BD6; }
+.vol-opt-sp.vol-opt-on { background: #7B6BD4; border-color: #7B6BD4; color: #FFF; }
+.vol-opt-check { font-size: 18rpx; }
+
+/* 统一轻提示：2秒自动消失，替代应用卡里不自动消失的原生 toast */
+.notify { position: fixed; left: 50%; bottom: 140rpx; transform: translateX(-50%); background: #3A2E6Bee; color: #FFFFFF; font-size: 26rpx; padding: 18rpx 36rpx; border-radius: 40rpx; z-index: 2000; white-space: nowrap; max-width: 88vw; overflow: hidden; text-overflow: ellipsis; box-shadow: 0 8rpx 24rpx rgba(43,36,86,.28); }
