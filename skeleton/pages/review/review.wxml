@@ -1,0 +1,90 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="hero">
+    <view class="deco-curve-img"></view>
+    <text class="hero-emoji">🧠</text>
+    <view class="hero-text">
+      <text class="hero-title">遗忘曲线复习</text>
+      <text class="hero-desc">按 1/2/4/7/15 天科学间隔重背</text>
+    </view>
+    <view class="due-badge">{{dueCount}}</view>
+  </view>
+
+  <!-- 未开始：待复习列表 -->
+  <block wx:if="{{!started && !gameOver}}">
+    <view class="stat-row">
+      <view class="stat-card"><text class="st-num">{{stats.total}}</text><text class="st-label">在册词</text></view>
+      <view class="stat-card due"><text class="st-num">{{dueCount}}</text><text class="st-label">今日待复习</text></view>
+      <view class="stat-card"><text class="st-num">{{stats.mastered}}</text><text class="st-label">已掌握</text></view>
+    </view>
+
+    <view class="tip-card">
+      <text class="tip-title">怎么运作？</text>
+      <text class="tip-line">答对 → 间隔 1→2→4→7→15 天再练</text>
+      <text class="tip-line">答错 → 回到第 1 天，重新排期</text>
+      <text class="tip-note">每次答题都会自动更新复习计划</text>
+    </view>
+
+    <button class="btn-primary start-btn" bindtap="startReview" wx:if="{{dueCount > 0}}">开始复习（{{dueCount}} 词）</button>
+    <view class="empty" wx:else>
+      <text class="empty-emoji">🎉</text>
+      <text class="empty-text">今天没有待复习的词</text>
+      <text class="empty-sub">去闯关答题，会自动生成复习计划</text>
+    </view>
+
+    <view class="list-head" wx:if="{{words.length > 0}}">今日清单</view>
+    <view class="word-list" wx:if="{{words.length > 0}}">
+      <view class="word-item" wx:for="{{words}}" wx:key="w">
+        <text class="word-name">{{item.w}}</text>
+        <text class="word-mean">{{item.m}}</text>
+        <text class="stage-tag">第{{item.stage + 1}}阶段</text>
+      </view>
+    </view>
+  </block>
+
+  <!-- 答题中 -->
+  <block wx:if="{{started && !gameOver}}">
+    <view class="topbar">
+      <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{qIndex + 1}}/{{total}}</text></view>
+      <view class="stat-box"><text class="stat-label">答对</text><text class="stat-val ok">{{right}}</text></view>
+      <view class="stat-box"><text class="stat-label">答错</text><text class="stat-val bad">{{wrong}}</text></view>
+    </view>
+    <view class="question-card">
+      <view class="q-head">
+        <text class="q-label">选出这个释义对应的单词</text>
+        <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+      </view>
+      <text class="q-main">{{current.q}}</text>
+    </view>
+    <view class="option-list">
+      <view class="option {{feedback === 'right' && item.word === current.answer ? 'opt-right' : ''}} {{feedback === 'wrong' && item.word === current.answer ? 'opt-wrong' : ''}}"
+            wx:for="{{options}}" wx:key="key" data-word="{{item.word}}" bindtap="tapOption">
+        <text class="opt-text">{{item.word}}</text>
+      </view>
+    </view>
+    <view class="review-tip">答对推进记忆阶段 · 答错明天再来</view>
+  </block>
+
+  <!-- 结算 -->
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">🧠</text>
+      <text class="result-title">复习完成！</text>
+      <view class="result-stats">
+        <view><text class="rs-num">{{right}}</text><text class="rs-label">答对</text></view>
+        <view><text class="rs-num">{{wrong}}</text><text class="rs-label">答错</text></view>
+      </view>
+      <button class="btn-primary result-btn" bindtap="backHome">返回</button>
+    </view>
+  </view>
+
+  <!-- 底部装饰：记忆曲线 + 时间节点（遗忘曲线复习专属） -->
+  <view class="foot-deco rv-deco">
+    <view class="rv-curve"></view>
+    <view class="rv-node rv-n1"></view>
+    <view class="rv-node rv-n2"></view>
+    <view class="rv-node rv-n3"></view>
+    <text class="rv-day">1d</text>
+    <text class="rv-day rv-day2">7d</text>
+  </view>
+</view>
