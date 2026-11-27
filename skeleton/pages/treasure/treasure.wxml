@@ -1,0 +1,146 @@
+<view class="page">
+  <view class="head">
+    <text class="head-title">宝箱仓库</text>
+    <text class="head-sub">闯关攒战利品 · 能量是通用货币</text>
+  </view>
+
+  <!-- 资产总览 -->
+  <view class="asset-row">
+    <view class="asset-card asset-energy">
+      <text class="asset-icon">⚡</text>
+      <text class="asset-num">{{energy}}</text>
+      <text class="asset-name">能量</text>
+    </view>
+    <view class="asset-card asset-shard">
+      <text class="asset-icon">🧩</text>
+      <text class="asset-num">{{shards}}</text>
+      <text class="asset-name">装扮碎片</text>
+    </view>
+    <view class="asset-card asset-cardn">
+      <text class="asset-icon">🎴</text>
+      <text class="asset-num">{{cards.total}}</text>
+      <text class="asset-name">词卡</text>
+    </view>
+  </view>
+
+  <!-- 下一箱预览 · 深紫渐变配色不变，加多处星点装饰 -->
+  <view class="next-card" wx:if="{{chest}}">
+    <view class="next-glow"></view>
+    <!-- 星点装饰：绝对定位，避开标题/奖励/按钮，不占布局 -->
+    <text class="next-star ns-1">✦</text>
+    <text class="next-star ns-2">✧</text>
+    <text class="next-star ns-3">✦</text>
+    <text class="next-star ns-4">✧</text>
+    <text class="next-star ns-5">✦</text>
+    <text class="next-star ns-6">✧</text>
+    <text class="next-star ns-7">✦</text>
+    <text class="next-star ns-8">✧</text>
+    <view class="next-top">
+      <text class="next-icon">{{chest.preview.icon}}</text>
+      <view class="next-text">
+        <text class="next-tag">再开一箱 · {{chest.preview.name}}</text>
+        <text class="next-desc">{{chest.preview.desc}}</text>
+      </view>
+      <view class="next-btn" bindtap="goChallenge">开箱</view>
+    </view>
+    <view class="next-rewards">
+      <text class="reward-chip">⚡ +{{chest.preview.energy}}</text>
+      <text class="reward-chip" wx:if="{{chest.preview.shards > 0}}">🧩 +{{chest.preview.shards}}</text>
+      <text class="reward-chip" wx:if="{{chest.preview.freezes > 0}}">🧊 +{{chest.preview.freezes}}</text>
+      <text class="reward-chip reward-card">{{chest.preview.cardLabel}}</text>
+    </view>
+    <text class="next-double-tip">📺 开箱后看视频，能量与碎片可翻倍 · 词卡不翻</text>
+  </view>
+
+  <!-- 新增②：当日抽卡进度（真实规则：当日第3次起史诗概率提升，不承诺必出） -->
+  <view class="pity-card">
+    <view class="pity-head">
+      <text class="pity-title">🎴 今日抽卡进度</text>
+      <text class="pity-state">{{pity.done ? '概率已提升' : '再抽 ' + pity.need + ' 次提升'}}</text>
+    </view>
+    <view class="pity-dots">
+      <view class="pity-dot {{index < pity.step ? 'pity-dot-on' : ''}}" wx:for="{{starSlots}}" wx:key="*this"></view>
+      <text class="pity-hint">第 3 次起史诗概率提升 · 已抽 {{pity.step}} 次</text>
+    </view>
+  </view>
+
+  <!-- 宝箱档位阶梯 -->
+  <view class="section-title">宝箱档位 · 越往后越豪华</view>
+  <view class="tier-row" wx:if="{{chest}}">
+    <view class="tier-item {{index <= nextTierIndex ? 'tier-on' : ''}}" wx:for="{{chest.tiers}}" wx:key="tier">
+      <text class="tier-icon">{{item.icon}}</text>
+      <text class="tier-name">{{item.name}}</text>
+      <text class="tier-gain">⚡{{item.energy}} · 🧩{{item.shards}}</text>
+    </view>
+  </view>
+
+  <!-- 装扮进度 -->
+  <view class="equip-card" bindtap="goEquip" wx:if="{{equip}}">
+    <text class="equip-icon">🎓</text>
+    <view class="equip-text">
+      <text class="equip-title">装扮图鉴 {{equip.ownedCount}}/{{equip.total}}</text>
+      <text class="equip-desc">{{equip.bonus > 0 ? '能量产出 +' + equip.bonus + '%' : '碎片合成装扮，答题产出更多能量'}}</text>
+      <view class="equip-track"><view class="equip-fill" style="width: {{equip.total > 0 ? equip.ownedCount * 100 / equip.total : 0}}%"></view></view>
+    </view>
+    <text class="equip-arrow">›</text>
+  </view>
+
+  <!-- 新增③：战利品用途说明（放在装扮图鉴与词卡收藏之间） -->
+  <view class="use-card">
+    <text class="use-title">战利品都有去处</text>
+    <view class="use-row"><text class="use-ico">⚡</text><text class="use-txt">能量 → 喂食 / 抽卡 / 复活</text></view>
+    <view class="use-row"><text class="use-ico">🧩</text><text class="use-txt">碎片 → 合成装扮，答题多攒能量</text></view>
+    <view class="use-row"><text class="use-ico">🎴</text><text class="use-txt">词卡 → 图鉴收藏 + 复习</text></view>
+  </view>
+
+  <!-- 词卡收藏（新增①：在原卡内加图鉴收集进度，原数字保留） -->
+  <view class="section-title">稀有词卡收藏</view>
+  <view class="cards-card" bindtap="openCards">
+    <view class="album-bar">
+      <view class="album-head">
+        <text class="album-label">图鉴收集</text>
+        <text class="album-count">{{album.collected}} / {{album.learned}} 已学词</text>
+      </view>
+      <view class="album-track"><view class="album-fill" style="width: {{album.percent}}%"></view></view>
+    </view>
+    <view class="cards-main">
+      <view class="cards-stat">
+        <view class="cs-item"><text class="cs-num">{{cards.epic}}</text><text class="cs-name">史诗</text></view>
+        <view class="cs-item"><text class="cs-num">{{cards.rare}}</text><text class="cs-name">稀有</text></view>
+        <view class="cs-item"><text class="cs-num">{{cards.total}}</text><text class="cs-name">总数</text></view>
+      </view>
+      <view class="cards-side">
+        <text class="cards-tip">{{cards.freeLeft > 0 ? '今日还有 ' + cards.freeLeft + ' 次免费盲盒' : '去看今天的新词卡'}}</text>
+        <text class="cards-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 终极礼状态 -->
+  <view class="ultimate-card {{ultimate.claimed ? 'ultimate-done' : ''}}" wx:if="{{ultimate && (ultimate.qualified || ultimate.claimed)}}" bindtap="{{ultimate.claimed ? '' : 'goMap'}}">
+    <text class="ultimate-icon">👑</text>
+    <view class="ultimate-text">
+      <text class="ultimate-title">{{ultimate.claimed ? '终极毕业礼已领取' : '终极毕业礼已解锁！'}}</text>
+      <text class="ultimate-desc">{{ultimate.claimed ? '领取于 ' + ultimate.date : '去地图线头开箱 · 史诗词卡 + 能量 + 补签卡'}}</text>
+    </view>
+    <text class="ultimate-arrow" wx:if="{{!ultimate.claimed}}">›</text>
+  </view>
+
+  <!-- 开箱记录 -->
+  <view class="section-title">开箱记录</view>
+  <view class="history-card" wx:if="{{chest.history.length > 0}}">
+    <view class="history-row" wx:for="{{chest.history}}" wx:key="index">
+      <text class="history-icon">{{item.icon}}</text>
+      <text class="history-name">{{item.name}}</text>
+      <text class="history-gain">⚡{{item.energy}}<text wx:if="{{item.shards > 0}}"> · 🧩{{item.shards}}</text><text wx:if="{{item.doubled}}" class="history-doubled"> · 📺×2</text></text>
+      <text class="history-date">{{item.date}}</text>
+    </view>
+  </view>
+  <view class="empty-card" wx:else>
+    <text class="empty-icon">📦</text>
+    <text class="empty-text">还没有开过箱，去闯关拿第一箱奖励吧</text>
+    <view class="empty-btn" bindtap="goChallenge">去闯关</view>
+  </view>
+
+  <view class="bottom-space"></view>
+</view>
