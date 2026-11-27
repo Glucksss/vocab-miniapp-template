@@ -1,0 +1,112 @@
+.page { min-height: 100vh; background: #F4F2FF; padding: 24rpx 24rpx 60rpx; }
+.head { padding: 8rpx 6rpx 22rpx; }
+.head-title { display: block; font-size: 40rpx; font-weight: 800; color: #2B2456; }
+.head-sub { display: block; margin-top: 6rpx; font-size: 22rpx; color: #8A86A8; }
+
+.asset-row { display: flex; gap: 14rpx; }
+.asset-card { flex: 1; border-radius: 24rpx; padding: 24rpx 12rpx; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.08); }
+.asset-energy { background: linear-gradient(135deg,#FFF3DC,#FFE4B0); }
+.asset-shard { background: linear-gradient(135deg,#EDEBFF,#DED9FF); }
+.asset-cardn { background: linear-gradient(135deg,#E2F5EE,#CDEEE0); }
+.asset-icon { font-size: 40rpx; }
+.asset-num { margin-top: 8rpx; font-size: 38rpx; font-weight: 800; color: #2B2456; }
+.asset-name { margin-top: 2rpx; font-size: 20rpx; color: #7E7A9A; }
+
+.next-card { position: relative; overflow: hidden; margin-top: 24rpx; padding: 26rpx 28rpx; border-radius: 28rpx; background: linear-gradient(135deg,#3A2E7A,#5B4BD6); }
+.next-glow { position: absolute; right: -40rpx; top: -60rpx; width: 200rpx; height: 200rpx; border-radius: 50%; background: rgba(255,255,255,0.08); }
+/* 星点装饰：8 处，金色/淡紫交替，绝对定位不占布局、避开文字 */
+.next-star { position: absolute; color: #F7D870; z-index: 0; line-height: 1; }
+.ns-1 { top: 14rpx; left: 20rpx; font-size: 24rpx; }
+.ns-2 { top: 40rpx; left: 58rpx; font-size: 16rpx; color: #C9B6FF; }
+.ns-3 { top: 20rpx; right: 200rpx; font-size: 18rpx; }
+.ns-4 { top: 76rpx; right: 28rpx; font-size: 20rpx; color: #C9B6FF; }
+.ns-5 { top: 118rpx; left: 16rpx; font-size: 17rpx; }
+.ns-6 { top: 150rpx; left: 62rpx; font-size: 14rpx; color: #C9B6FF; }
+.ns-7 { bottom: 92rpx; right: 20rpx; font-size: 22rpx; }
+.ns-8 { bottom: 16rpx; left: 100rpx; font-size: 16rpx; color: #C9B6FF; }
+.next-top { display: flex; align-items: center; position: relative; z-index: 2; }
+.next-icon { font-size: 56rpx; margin-right: 18rpx; }
+.next-text { display: flex; flex-direction: column; flex: 1; min-width: 0; }
+.next-tag { font-size: 27rpx; font-weight: 800; color: #F7D870; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.next-desc { margin-top: 6rpx; font-size: 20rpx; color: #CFC9F5; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.next-rewards { display: flex; flex-wrap: wrap; gap: 10rpx; margin-top: 18rpx; position: relative; z-index: 2; }
+.reward-chip { padding: 8rpx 16rpx; border-radius: 999rpx; background: rgba(255,255,255,0.14); color: #FFF; font-size: 21rpx; }
+.next-double-tip { display: block; position: relative; z-index: 2; margin-top: 12rpx; font-size: 18rpx; color: #D9C6FF; }
+.reward-card { background: rgba(247,216,112,0.22); color: #FBE9A8; }
+/* C 排版：小胶囊「开箱」按钮放标题行右侧，卡片压矮 */
+.next-btn { margin-left: 14rpx; padding: 12rpx 28rpx; border-radius: 999rpx; background: #F7D870; color: #3A2E7A; text-align: center; font-size: 24rpx; font-weight: 800; white-space: nowrap; flex-shrink: 0; position: relative; z-index: 2; }
+
+/* 新增②：当日抽卡进度 */
+.pity-card { margin-top: 18rpx; padding: 22rpx 26rpx; border-radius: 22rpx; background: linear-gradient(135deg,#FFF6E5,#FFECD0); box-shadow: 0 4rpx 16rpx rgba(232,154,28,.10); }
+.pity-head { display: flex; align-items: baseline; justify-content: space-between; }
+.pity-title { font-size: 26rpx; font-weight: 800; color: #A96A12; }
+.pity-state { font-size: 22rpx; font-weight: 700; color: #E8821A; }
+.pity-dots { display: flex; align-items: center; gap: 12rpx; margin-top: 16rpx; }
+.pity-dot { width: 30rpx; height: 14rpx; border-radius: 999rpx; background: #F0DDBE; }
+.pity-dot-on { background: linear-gradient(90deg,#F5A73A,#E8821A); }
+.pity-hint { font-size: 19rpx; color: #B08A4A; margin-left: auto; }
+
+.section-title { margin: 34rpx 6rpx 16rpx; font-size: 28rpx; font-weight: 800; color: #2B2456; }
+.tier-row { display: flex; gap: 10rpx; }
+.tier-item { flex: 1; border-radius: 20rpx; padding: 18rpx 6rpx; background: #EFEDF8; display: flex; flex-direction: column; align-items: center; opacity: 0.5; }
+.tier-item.tier-on { background: #FFF; opacity: 1; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.10); }
+.tier-icon { font-size: 40rpx; }
+.tier-name { margin-top: 6rpx; font-size: 19rpx; font-weight: 700; color: #4A4480; }
+.tier-gain { margin-top: 6rpx; font-size: 17rpx; color: #8A86A8; }
+
+.equip-card { display: flex; align-items: center; margin-top: 4rpx; padding: 24rpx; border-radius: 24rpx; background: #FFF; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.06); }
+.equip-icon { font-size: 48rpx; margin-right: 18rpx; }
+.equip-text { flex: 1; display: flex; flex-direction: column; }
+.equip-title { font-size: 26rpx; font-weight: 700; color: #2B2456; }
+.equip-desc { margin-top: 6rpx; font-size: 21rpx; color: #8A86A8; }
+.equip-track { height: 10rpx; border-radius: 999rpx; background: #EFEDF8; margin-top: 12rpx; overflow: hidden; }
+.equip-fill { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg,#7B6BF0,#5B4BD6); }
+.equip-arrow { font-size: 36rpx; color: #B8B2D8; }
+
+/* 新增③：战利品用途说明 */
+.use-card { margin-top: 4rpx; padding: 24rpx 26rpx; border-radius: 24rpx; background: #FFF; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.06); }
+.use-title { display: block; font-size: 26rpx; font-weight: 800; color: #2B2456; margin-bottom: 14rpx; }
+.use-row { display: flex; align-items: center; margin-top: 10rpx; }
+.use-ico { font-size: 30rpx; width: 44rpx; flex-shrink: 0; }
+.use-txt { font-size: 22rpx; color: #6B6692; }
+
+.cards-card { display: block; padding: 24rpx; border-radius: 24rpx; background: #FFF; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.06); }
+/* 新增①：图鉴收集进度（在原词卡卡内，数字区上方） */
+.album-bar { margin-bottom: 20rpx; }
+.album-head { display: flex; align-items: baseline; justify-content: space-between; }
+.album-label { font-size: 25rpx; font-weight: 800; color: #3A2E6B; }
+.album-count { font-size: 21rpx; font-weight: 700; color: #B4539A; }
+.album-track { height: 12rpx; border-radius: 999rpx; background: #F3EAF7; margin-top: 12rpx; overflow: hidden; }
+.album-fill { height: 100%; border-radius: 999rpx; background: linear-gradient(90deg,#E36FB0,#B4539A); }
+.cards-main { display: flex; align-items: center; }
+.cards-stat { display: flex; gap: 26rpx; }
+.cs-item { display: flex; flex-direction: column; align-items: center; }
+.cs-num { font-size: 32rpx; font-weight: 800; color: #5B4BD6; }
+.cs-name { margin-top: 4rpx; font-size: 19rpx; color: #8A86A8; }
+.cards-side { flex: 1; display: flex; align-items: center; justify-content: flex-end; }
+.cards-tip { font-size: 20rpx; color: #8A86A8; text-align: right; }
+.cards-arrow { font-size: 36rpx; color: #B8B2D8; margin-left: 8rpx; }
+
+.ultimate-card { display: flex; align-items: center; margin-top: 24rpx; padding: 24rpx; border-radius: 24rpx; background: linear-gradient(135deg,#4A2E7A,#8A4BC6); }
+.ultimate-card.ultimate-done { background: linear-gradient(135deg,#7A7450,#B8A24A); }
+.ultimate-icon { font-size: 48rpx; margin-right: 18rpx; }
+.ultimate-text { flex: 1; display: flex; flex-direction: column; }
+.ultimate-title { font-size: 26rpx; font-weight: 800; color: #FFE9A8; }
+.ultimate-desc { margin-top: 6rpx; font-size: 20rpx; color: #E6D9F5; }
+.ultimate-arrow { font-size: 36rpx; color: #FBE9A8; }
+
+.history-card { padding: 8rpx 24rpx; border-radius: 24rpx; background: #FFF; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.06); }
+.history-row { display: flex; align-items: center; padding: 18rpx 0; border-bottom: 1rpx solid #F2F0FA; }
+.history-row:last-child { border-bottom: none; }
+.history-icon { font-size: 36rpx; margin-right: 16rpx; }
+.history-name { font-size: 24rpx; font-weight: 700; color: #3B3565; width: 140rpx; }
+.history-gain { flex: 1; font-size: 21rpx; color: #6B6692; }
+.history-doubled { color: #E89A1C; font-weight: 700; }
+.history-date { font-size: 19rpx; color: #AAA6C2; }
+
+.empty-card { padding: 48rpx 24rpx; border-radius: 24rpx; background: #FFF; display: flex; flex-direction: column; align-items: center; box-shadow: 0 4rpx 18rpx rgba(91,75,214,0.06); }
+.empty-icon { font-size: 64rpx; }
+.empty-text { margin-top: 14rpx; font-size: 22rpx; color: #8A86A8; }
+.empty-btn { margin-top: 20rpx; padding: 14rpx 40rpx; border-radius: 999rpx; background: linear-gradient(135deg,#7B6BF0,#5B4BD6); color: #FFF; font-size: 24rpx; font-weight: 700; }
+
+.bottom-space { height: 40rpx; }
