@@ -1,0 +1,147 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+
+  <!-- 顶部状态条 -->
+  <view class="topbar" wx:if="{{started && !gameOver}}">
+    <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{qIndex + 1}}/{{total}}</text></view>
+    <view class="stat-box"><text class="stat-label">连击</text><text class="stat-val combo">×{{combo}}</text></view>
+    <view class="stat-box"><text class="stat-label">已清剿</text><text class="stat-val kill">{{killed}}</text></view>
+  </view>
+
+  <!-- 开始页 -->
+  <view class="intro" wx:if="{{!started && !gameOver}}">
+    <view class="intro-banner">
+      <text class="intro-emoji">💥</text>
+      <view class="intro-text">
+        <text class="intro-title">错词清剿</text>
+        <text class="intro-sub">只打你错词本里的词 · 三遍清掉才算掌握</text>
+      </view>
+    </view>
+    <view class="rule-card">
+      <view class="rule-head">三遍过滤法</view>
+      <view class="rule-row"><text class="rule-dot d1">1</text><text>看英识义 · 认出单词</text></view>
+      <view class="rule-row"><text class="rule-dot d2">2</text><text>看义选词 · 反向回忆</text></view>
+      <view class="rule-row"><text class="rule-dot d3">3</text><text>拼写过关 · 彻底划掉</text></view>
+      <view class="rule-foot">三遍全过，才从错词本永久移除</view>
+    </view>
+    <view class="intro-stats">
+      <view><text class="is-num">{{remain}}</text><text class="is-label">待清剿</text></view>
+      <view><text class="is-num">{{stubbornCount}}</text><text class="is-label">顽固词</text></view>
+    </view>
+    <button class="btn-primary start-btn" bindtap="start">开始清剿 →</button>
+  </view>
+
+  <!-- 答题区 -->
+  <block wx:if="{{started && !gameOver && currentQ}}">
+    <view class="stage-head">
+      <text class="stage-label">{{currentQ.stageLabel}}</text>
+      <view class="stage-dots">
+        <text class="sd {{currentQ.passDots[0] ? 'sd-on' : ''}}">1</text>
+        <text class="sd {{currentQ.passDots[1] ? 'sd-on' : ''}}">2</text>
+        <text class="sd {{currentQ.passDots[2] ? 'sd-on' : ''}}">3</text>
+      </view>
+    </view>
+
+    <view class="question-card">
+      <view class="q-head">
+        <text class="q-label">{{currentQ.stage === 2 ? '拼出这个单词' : (currentQ.stage === 1 ? '选出正确的英文' : '选出正确的中文')}}</text>
+        <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+      </view>
+      <text class="q-main">{{currentQ.q}}</text>
+    </view>
+
+    <!-- 选择题（第1、2遍） -->
+    <block wx:if="{{currentQ.type === 'choice'}}">
+      <view class="option-list">
+        <view class="option {{feedback && item.label === currentQ.answer ? 'opt-right' : ''}} {{feedback === 'wrong' && item.label === wrongPick ? 'opt-wrong' : ''}}"
+              wx:for="{{currentQ.options}}" wx:key="label" data-label="{{item.label}}" bindtap="tapOption">
+          <text class="opt-text">{{item.label}}</text>
+          <text class="opt-mark" wx:if="{{feedback === 'wrong' && item.label === wrongPick}}">✕</text>
+          <text class="opt-mark" wx:elif="{{feedback === 'right' && item.label === currentQ.answer}}">✓</text>
+        </view>
+      </view>
+    </block>
+
+    <!-- 拼写题（第3遍） -->
+    <block wx:else>
+      <view class="answer-box {{feedback}}">
+        <view class="answer-slot" wx:for="{{ansLetters}}" wx:key="id" data-id="{{item.id}}" bindtap="tapAnswer">
+          <text class="answer-ch">{{item.ch}}</text>
+        </view>
+        <text class="answer-mark" wx:if="{{feedback === 'right'}}">✓</text>
+        <text class="answer-mark answer-mark-wrong" wx:elif="{{feedback === 'wrong'}}">✕</text>
+      </view>
+      <view class="letter-pool">
+        <view class="letter-btn {{item.used ? 'letter-used' : ''}}" wx:for="{{letters}}" wx:key="id" data-id="{{item.id}}" bindtap="tapLetter">
+          <text class="letter-ch">{{item.ch}}</text>
+        </view>
+      </view>
+    </block>
+
+    <view class="fb-actions" wx:if="{{feedback}}">
+      <view class="wc-open" bindtap="openWordCard">📖 看词卡</view>
+      <text class="fb-hint">{{feedback === 'right' ? (currentQ.stage === 2 ? '✓ 彻底清掉！' : '✓ 过了一遍') : '✕ 进度归零，下次再来'}}</text>
+    </view>
+  </block>
+
+  <!-- 结算：清剿战报 -->
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">🏆</text>
+      <text class="result-title">清剿战报</text>
+      <text class="result-big">{{clearedCount}}</text>
+      <text class="result-big-label">个词彻底清掉</text>
+      <text class="result-note">三遍全过 · 已从错词本永久移除</text>
+
+      <view class="dist-row"><text class="chip chip-green">●●● 三遍全过</text><text class="dist-num green">{{clearedCount}} 词</text></view>
+      <view class="dist-row"><text class="chip chip-amber">●○○ 还需巩固</text><text class="dist-num amber">{{pass1Count}} 词</text></view>
+      <view class="dist-row"><text class="chip chip-red">○○○ 没拿下</text><text class="dist-num red">{{missCount}} 词</text></view>
+
+      <view class="result-stats">
+        <view><text class="rs-num">×{{maxCombo}}</text><text class="rs-label">最高连击</text></view>
+        <view><text class="rs-num">{{remain}}</text><text class="rs-label">剩余错词</text></view>
+      </view>
+      <view class="stubborn-tip" wx:if="{{stubbornCount > 0}}">{{stubbornCount}} 个顽固词（连续两局没清掉）已置顶，下次优先出现</view>
+      <button class="btn-primary result-btn" bindtap="retry">继续清剿</button>
+      <button class="result-btn ghost" bindtap="backHome">返回错词本</button>
+    </view>
+  </view>
+
+  <!-- 星际词卡弹层 -->
+  <view class="wc-mask" wx:if="{{detailOpen}}" bindtap="closeWordCard">
+    <view class="wc-card" catchtap="noop">
+      <view class="wc-close" bindtap="closeWordCard">✕</view>
+      <view class="wc-planet wc-planet-a">🌟</view>
+      <view class="wc-planet wc-planet-b">✨</view>
+      <view class="wc-title">星际单词探险</view>
+      <view class="wc-word">{{detail.w}}</view>
+      <view class="wc-phonetic" wx:if="{{detail.p}}">/{{detail.p}}/</view>
+      <view class="wc-section">
+        <view class="wc-section-title">📖 释义</view>
+        <view class="wc-cn">{{detail.cn}}</view>
+        <view class="wc-en" wx:if="{{detail.en}}">{{detail.en}}</view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.collocations.length}}">
+        <view class="wc-section-title">📖 高考固定搭配</view>
+        <view class="wc-coll" wx:for="{{detail.collocations}}" wx:key="en">
+          <text class="wc-coll-i">{{index + 1}}.</text>
+          <view class="wc-coll-body">
+            <view class="wc-coll-en">{{item.en}}</view>
+            <view class="wc-coll-cn">{{item.cn}}</view>
+          </view>
+        </view>
+      </view>
+      <view class="wc-section" wx:if="{{detail.synonyms.length}}">
+        <view class="wc-section-title">🔁 同义替换</view>
+        <view class="wc-syns">
+          <text class="wc-syn" wx:for="{{detail.synonyms}}" wx:key="*this">{{item}}</text>
+        </view>
+      </view>
+      <view class="wc-source">{{detail.source}}</view>
+      <view class="wc-actions">
+        <button class="wc-btn ghost" bindtap="addDetailToWrong">{{detailSaved ? '已加入错词本' : '加入错词本'}}</button>
+        <button class="wc-btn" bindtap="closeWordCardAndAdvance">下一题</button>
+      </view>
+    </view>
+  </view>
+</view>
