@@ -1,0 +1,100 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <view class="hero">
+    <view class="ctx-quote quote-a">“</view>
+    <view class="ctx-quote quote-b">”</view>
+    <view class="ctx-qmark">?</view>
+    <view class="ctx-dot dot-a"></view>
+    <view class="ctx-dot dot-b"></view>
+    <text class="hero-emoji">🔍</text>
+    <view class="hero-text">
+      <text class="hero-title">语境辨析关</text>
+      <text class="hero-desc">读英文释义，选出正确单词</text>
+    </view>
+    <view class="level-badge">{{levelIndex + 1}}/{{levelCount}}</view>
+  </view>
+
+  <!-- 分包数据加载中 -->
+  <view class="ctx-loading" wx:if="{{loading}}">
+    <text class="cl-spinner">◌</text>
+    <text class="cl-text">正在加载题库…</text>
+  </view>
+
+  <!-- 预览环境加载不了分包时的降级提示，不影响答题 -->
+  <view class="ctx-degraded" wx:if="{{degraded && !loading}}">当前环境题库简化模式 · 看中文释义选单词</view>
+
+  <!-- 未开始：先展示三张数据卡，进答题后沿用同一组卡 -->
+  <view class="intro" wx:if="{{!started && !gameOver && !loading}}">
+    <view class="topbar">
+      <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">0/{{words.length}}</text></view>
+      <view class="stat-box"><text class="stat-label">得分</text><text class="stat-val">{{score}}</text></view>
+      <view class="stat-box"><text class="stat-label">答对</text><text class="stat-val ok">{{correct}}</text></view>
+    </view>
+    <view class="intro-card">
+      <text class="intro-emoji">📖</text>
+      <text class="intro-title">第 {{levelIndex + 1}} 关</text>
+      <text class="intro-desc">本关 {{words.length}} 个词 · 看英文释义选单词</text>
+      <text class="intro-tip">答对 8/12/15 题得 1/2/3 星</text>
+    </view>
+    <button class="btn-primary start-btn" bindtap="start">开始挑战</button>
+  </view>
+
+  <!-- 答题中 -->
+  <block wx:if="{{started && !gameOver}}">
+    <view class="topbar">
+      <view class="stat-box"><text class="stat-label">进度</text><text class="stat-val">{{qIndex + 1}}/{{total}}</text></view>
+      <view class="stat-box"><text class="stat-label">得分</text><text class="stat-val">{{score}}</text></view>
+      <view class="stat-box"><text class="stat-label">答对</text><text class="stat-val ok">{{correct}}</text></view>
+    </view>
+    <view class="question-card">
+      <view class="q-head">
+        <text class="q-label">这个英文释义对应哪个单词？</text>
+        <text class="speak-btn" bindtap="speakQuestion">🔊</text>
+      </view>
+      <text class="q-en">{{current.q}}</text>
+      <text class="q-cn" wx:if="{{feedback}}">{{current.meaning}}</text>
+    </view>
+    <view class="option-list">
+      <view class="option opt-{{optColors[index]}} {{feedback === 'right' && item === current.answer ? 'opt-right' : ''}} {{feedback === 'wrong' && item === current.answer ? 'opt-wrong' : ''}}"
+            wx:for="{{options}}" wx:key="*this" data-word="{{item}}" bindtap="tapOption">
+        <view class="opt-badge">{{optLetters[index]}}</view>
+        <text class="opt-text">{{item}}</text>
+      </view>
+    </view>
+    <view class="ctx-tip">看英文释义选词 · 答错会进错词本并排入复习</view>
+  </block>
+
+  <!-- 结算 -->
+  <view class="overlay" wx:if="{{gameOver}}">
+    <view class="result-card">
+      <text class="result-emoji">🔍</text>
+      <text class="result-title">语境关完成！</text>
+      <view class="result-stars">
+        <text class="{{star >= 1 ? 'star-on' : 'star-off'}}">★</text>
+        <text class="{{star >= 2 ? 'star-on' : 'star-off'}}">★</text>
+        <text class="{{star >= 3 ? 'star-on' : 'star-off'}}">★</text>
+      </view>
+      <view class="result-stats">
+        <view><text class="rs-num">{{correct}}</text><text class="rs-label">答对</text></view>
+        <view><text class="rs-num">{{score}}</text><text class="rs-label">得分</text></view>
+      </view>
+      <view class="ultimate-tip" wx:if="{{ultimateReady}}">
+        <view class="ut-head">🏆 终极宝箱已解锁！</view>
+        <view class="ut-desc">回地图，点路线最后线头的金色宝箱开箱领取</view>
+        <view class="ut-btn" bindtap="goUltimateChest">去开箱 →</view>
+      </view>
+      <button class="btn-primary result-btn" bindtap="nextLevel">下一关</button>
+      <button class="result-btn ghost" bindtap="backHome">返回地图</button>
+    </view>
+  </view>
+
+  <view class="source-note">释义参考 ECDICT 开源词典 · 非真题原句</view>
+
+  <!-- 底部装饰：放大镜 + 问号 + 语境引号（语境辨析关专属） -->
+  <view class="foot-deco ct-deco">
+    <view class="ct-glass"><view class="ct-glass-handle"></view></view>
+    <text class="ct-qmark">?</text>
+    <text class="ct-quote ct-q1">“</text>
+    <text class="ct-quote ct-q2">”</text>
+  </view>
+</view>
