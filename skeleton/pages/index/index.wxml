@@ -1,0 +1,228 @@
+<view class="page">
+  <view class="notify" wx:if="{{notifyText}}">{{notifyText}}</view>
+  <!-- 顶部状态行：⭐ / 🔥 / ⚡ 合一行 -->
+  <view class="status-bar">
+    <view class="logo-group">
+      <view class="logo-badge">单词闯关</view>
+      <view class="help-btn" catchtap="openGuide">?</view>
+    </view>
+    <view class="status-pills">
+      <view class="pill pill-star" data-panel="star" bindtap="openInfo">⭐ {{totalStars}}</view>
+      <view class="pill pill-fire" data-panel="fire" bindtap="openInfo">🔥 {{streak}}天</view>
+      <view class="pill pill-energy" data-panel="energy" bindtap="openInfo">⚡ {{energy}}</view>
+    </view>
+  </view>
+
+  <!-- 继续闯关大卡（唯一地图入口）· 星际深蓝渐变 + 装饰（三图标在卡片外状态栏，位置不动） -->
+  <view class="continue-card" bindtap="openMap">
+    <view class="cc-glow"></view>
+    <view class="cc-orbit"></view>
+    <!-- 星点装饰：全部绝对定位，不占布局、不挡文字 -->
+    <text class="cc-star cc-star-1">✦</text>
+    <text class="cc-star cc-star-2">✧</text>
+    <text class="cc-star cc-star-3">✦</text>
+    <text class="cc-star cc-star-4">✧</text>
+    <text class="cc-star cc-star-5">✦</text>
+    <text class="cc-star cc-star-6">✧</text>
+    <text class="cc-star cc-star-7">✦</text>
+    <!-- 土星：顶部中间空位 -->
+    <view class="cc-saturn"><view class="cc-saturn-ring"></view></view>
+    <!-- 卡通飞船：纯 CSS 拼装，停在「下一站」行右侧，避开顶部册次名 -->
+    <view class="cc-ship">
+      <view class="cc-ship-flame"></view>
+      <view class="cc-ship-wing cc-ship-wing-a"></view>
+      <view class="cc-ship-wing cc-ship-wing-b"></view>
+      <view class="cc-ship-body"></view>
+      <view class="cc-ship-window"></view>
+      <view class="cc-ship-glint"></view>
+      <view class="cc-ship-nose"></view>
+    </view>
+    <view class="cc-top">
+      <text class="cc-label">继续闯关</text>
+      <text class="cc-vol">{{currentVol.name}}</text>
+    </view>
+    <view class="cc-next">下一站 · {{nextLevelName}}</view>
+    <view class="cc-progress">
+      <view class="cc-track"><view class="cc-fill" style="width: {{volLevelCount > 0 ? doneCount * 100 / volLevelCount : 0}}%"></view></view>
+      <text class="cc-count">{{doneCount}}/{{volLevelCount}} 关</text>
+    </view>
+    <view class="cc-btn">进入大地图 →</view>
+  </view>
+
+  <!-- 奖励速览：默认折叠只露一行，点开看"怎么赚 / 怎么花 / 错词去哪" -->
+  <view class="reward-strip {{rewardOpen ? 'rs-open' : ''}}">
+    <view class="rs-head" bindtap="toggleReward">
+      <text class="rs-emoji">🎁</text>
+      <text class="rs-title">奖励怎么拿？</text>
+      <text class="rs-brief" wx:if="{{!rewardOpen}}">答对攒能量 · 通关开宝箱 · 点开看说明</text>
+      <text class="rs-arrow {{rewardOpen ? 'rs-arrow-open' : ''}}">›</text>
+    </view>
+    <view class="rs-body" wx:if="{{rewardOpen}}">
+      <view class="rs-row"><text class="rs-tag rs-tag-get">赚</text><text class="rs-text">答对任意题 → ⚡能量 +1（每日加成额度内 +2）、宠物成长 +3</text></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-get">赚</text><text class="rs-text">通关开宝箱 → ⚡能量 + 🧩碎片 + 稀有词卡</text></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-miss">错</text><text class="rs-text">答错 → 收进错词本，每 3 错送 1 张补签卡</text></view>
+      <view class="rs-sep"></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-use">花</text><text class="rs-text">⚡能量 → 抽盲盒 / 喂宠物 / 闯关复活</text></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-use">花</text><text class="rs-text">🧩碎片 → 合成装扮，答题多攒能量</text></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-badge">章</text><text class="rs-text">答对/打卡/复习/开箱 → 解锁🏅徽章，成就页看进度</text></view>
+      <view class="rs-row"><text class="rs-tag rs-tag-get">赚</text><text class="rs-text">练习场看视频 → 每日加成 +10 题/次，最多 5 次</text></view>
+      <view class="rs-foot">四个分页：闯关打基础 · 练习冲高分 · 宝箱看战利品 · 我的养宠物</view>
+    </view>
+  </view>
+
+  <!-- 每日签到长条（和顶部🔥共用同一个说明层） -->
+  <view class="sign-bar" data-panel="fire" bindtap="openInfo">
+    <view class="sign-icon">🔥</view>
+    <view class="sign-text">
+      <text class="sign-title">每日签到 · 已连续 {{streak}} 天</text>
+      <text class="sign-sub">玩一关自动点亮 · 漏签归零 · 补签卡可续</text>
+    </view>
+    <text class="sign-arrow">›</text>
+  </view>
+
+  <!-- 今日任务三件 -->
+  <view class="section-title">今日任务 <text class="section-sub">每天一点，连胜不断</text></view>
+  <view class="task-grid">
+    <view class="task-card task-quick" bindtap="quickPlay">
+      <text class="task-icon">🎯</text>
+      <text class="task-name">再来一局</text>
+      <text class="task-pill pill-quick">打地鼠</text>
+      <text class="task-gain">答对 +⚡</text>
+    </view>
+    <view class="task-card task-draw" bindtap="openCards">
+      <text class="task-icon">🎴</text>
+      <text class="task-name">单词盲盒</text>
+      <text class="task-pill pill-draw" wx:if="{{drawFreeLeft > 0}}">免费 {{drawFreeLeft}} 次</text>
+      <text class="task-pill pill-draw" wx:else>去抽卡</text>
+      <text class="task-gain">稀有词卡</text>
+    </view>
+    <view class="task-card task-review" bindtap="openReview">
+      <text class="task-icon">🧠</text>
+      <text class="task-name">遗忘复习</text>
+      <text class="task-badge" wx:if="{{dueCount > 0}}">{{dueCount}}</text>
+      <text class="task-pill pill-review" wx:else>已完成</text>
+      <text class="task-gain">防遗忘</text>
+    </view>
+  </view>
+
+  <!-- 小入口 -->
+  <view class="mini-grid">
+    <view class="mini-card" bindtap="openPet">
+      <text class="mini-icon">🦉</text>
+      <text class="mini-name">我的词枭</text>
+    </view>
+    <view class="mini-card" bindtap="openAchieve">
+      <text class="mini-icon">🏅</text>
+      <text class="mini-name">成就 {{badgeEarned}}/{{badgeTotal}}</text>
+    </view>
+    <view class="mini-card" bindtap="openContext">
+      <text class="mini-icon">🔍</text>
+      <text class="mini-name">语境关</text>
+    </view>
+    <view class="mini-card" bindtap="goWrong">
+      <text class="mini-icon">📕</text>
+      <text class="mini-name">错词本{{wrongCount > 0 ? ' ' + wrongCount : ''}}</text>
+    </view>
+  </view>
+
+  <view class="bottom-hint" data-panel="source" bindtap="openInfo">题库覆盖译林7册 · 高考3500 · 真题高频 · <text class="bh-link">数据来源</text></view>
+
+  <!-- 顶部胶囊 / 签到长条说明弹层 -->
+  <view class="info-mask" wx:if="{{infoPanel}}" bindtap="closeInfo"></view>
+
+  <view class="info-panel" wx:if="{{infoPanel === 'star'}}">
+    <view class="ip-head">
+      <text class="ip-title">⭐ 星星</text>
+      <text class="ip-close" bindtap="closeInfo">✕</text>
+    </view>
+    <view class="ip-big ip-star-num">{{totalStars}} / {{maxStars}}</view>
+    <text class="ip-sub">每关满 3 星 · 按教材单元累计</text>
+    <view class="ip-note ip-note-star">星星记录每关通关质量，攒星星解锁成就</view>
+  </view>
+
+  <view class="info-panel" wx:if="{{infoPanel === 'fire'}}">
+    <view class="ip-head">
+      <text class="ip-title">🔥 连续打卡</text>
+      <text class="ip-close" bindtap="closeInfo">✕</text>
+    </view>
+    <view class="ip-big ip-fire-num">已连续 {{streak}} 天</view>
+    <text class="ip-sub">历史最长 {{streakBest}} 天 · 补签卡 {{freezes}} 张</text>
+    <text class="ip-week-label">近 7 天</text>
+    <view class="ip-week">
+      <view class="ip-day {{item.active ? 'ip-day-on' : ''}}" wx:for="{{week}}" wx:key="key">
+        <text class="ip-day-label">{{item.label}}</text>
+        <text class="ip-day-dot">{{item.active ? '✓' : '·'}}</text>
+      </view>
+    </view>
+    <view class="ip-note ip-note-fire" wx:if="{{streak > 0}}">今天玩一关就点亮，明天见</view>
+    <view class="ip-note ip-note-fire" wx:else>今天玩一关，重新点亮连续天数</view>
+    <view class="ip-freeze-btn" wx:if="{{freezes > 0 && streak === 0}}" bindtap="useFreeze">🧊 用补签卡恢复连续天数</view>
+    <view class="ip-ad-btn" wx:if="{{streak === 0}}" bindtap="freezeByAd">📺 看视频补签 · 恢复连续天数</view>
+  </view>
+
+  <view class="info-panel" wx:if="{{infoPanel === 'energy'}}">
+    <view class="ip-head">
+      <text class="ip-title">⚡ 能量</text>
+      <text class="ip-close" bindtap="closeInfo">✕</text>
+    </view>
+    <view class="ip-big ip-energy-num">{{energy}}</view>
+    <text class="ip-sub">学习是唯一的铸币厂</text>
+    <view class="ip-note ip-note-energy">
+      <text>答对题 → 攒能量</text>
+      <text>喂食宠物 / 抽单词盲盒 / 闯关复活 → 花能量</text>
+      <text>穿戴装扮可提速产出</text>
+    </view>
+  </view>
+
+  <!-- 数据来源与授权（合规署名） -->
+  <view class="info-panel" wx:if="{{infoPanel === 'source'}}">
+    <view class="ip-head">
+      <text class="ip-title">ℹ️ 数据来源与授权</text>
+      <text class="ip-close" bindtap="closeInfo">✕</text>
+    </view>
+    <view class="src-body">
+      <view class="src-row"><text class="src-k">译林词表</text><text class="src-v">来自「抗遗忘单词表」word.threeher.cn，依据 CC BY 4.0 授权，已整理改编</text></view>
+      <view class="src-row"><text class="src-k">音标释义</text><text class="src-v">参考 ECDICT 开源词典（MIT 许可，© 2025 Linwei），保留来源署名</text></view>
+      <view class="src-row"><text class="src-k">同义词</text><text class="src-v">由 Princeton WordNet 派生，遵循 WNL 许可</text></view>
+      <view class="src-row"><text class="src-k">语境题</text><text class="src-v">取自 ECDICT 真实英文释义，非真题原句</text></view>
+      <view class="src-row"><text class="src-k">红利素材</text><text class="src-v">宠物立绘、地图与图标为 AI 生成或自主绘制</text></view>
+      <view class="src-foot">本小程序为公益学习工具，仅供个人学习使用</view>
+    </view>
+  </view>
+
+  <!-- 首次三步引导：盖在首页上方，看过写标记不再弹 -->
+  <view class="guide-mask" wx:if="{{guideOpen}}"></view>
+  <view class="guide-card" wx:if="{{guideOpen}}">
+    <view class="gc-head">
+      <text class="gc-title">欢迎来到单词闯关</text>
+      <text class="gc-sub">3 步带你上手</text>
+    </view>
+    <view class="gc-steps">
+      <view class="gc-step">
+        <text class="gc-num">1</text>
+        <view class="gc-step-text">
+          <text class="gc-step-title">先玩一关打地鼠</text>
+          <text class="gc-step-desc">看中文敲英文，随手就上手</text>
+        </view>
+      </view>
+      <view class="gc-step">
+        <text class="gc-num gc-num-2">2</text>
+        <view class="gc-step-text">
+          <text class="gc-step-title">答对攒 ⚡ 能量</text>
+          <text class="gc-step-desc">唯一货币，学习换来的</text>
+        </view>
+      </view>
+      <view class="gc-step">
+        <text class="gc-num gc-num-3">3</text>
+        <view class="gc-step-text">
+          <text class="gc-step-title">去宝箱页抽张卡</text>
+          <text class="gc-step-desc">闯关/练习/宝箱/我的 · 四个分页随你逛</text>
+        </view>
+      </view>
+    </view>
+    <view class="gc-btns">
+      <view class="gc-btn gc-skip" bindtap="closeGuide">跳过</view>
+      <view class="gc-btn gc-go" bindtap="startGuide">开始闯关 →</view>
+    </view>
+  </view>
+</view>
