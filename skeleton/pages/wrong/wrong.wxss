@@ -1,0 +1,70 @@
+.page { position: relative; box-sizing: border-box; min-height: 100vh; padding: 28rpx 28rpx 60rpx; }
+.hero { position: relative; overflow: hidden; box-sizing: border-box; display: flex; align-items: center; min-height: 180rpx; background: linear-gradient(135deg, #F0658A, #E5547A); border-radius: 28rpx; padding: 36rpx 30rpx; color: #FFF; box-shadow: 0 6rpx 0 #F3B8CA, 0 10rpx 24rpx rgba(229,84,122,.18); }
+.hero-emoji { position: relative; z-index: 2; font-size: 64rpx; }
+.hero-text { position: relative; z-index: 2; margin-left: 20rpx; display: flex; flex-direction: column; flex: 1; }
+.hero-title { font-size: 36rpx; font-weight: 800; }
+.hero-desc { margin-top: 6rpx; font-size: 22rpx; opacity: 0.9; }
+.count-badge { position: relative; z-index: 2; background: rgba(255,255,255,0.25); border-radius: 999rpx; padding: 10rpx 24rpx; font-size: 34rpx; font-weight: 800; }
+.deco-cross { position: absolute; z-index: 1; font-size: 46rpx; font-weight: 800; color: rgba(255,255,255,.2); }
+.cross-a { right: 150rpx; top: -10rpx; transform: rotate(-18deg); }
+.cross-b { right: 40rpx; bottom: -20rpx; transform: rotate(14deg); }
+.deco-bang { position: absolute; z-index: 1; right: 226rpx; bottom: 24rpx; width: 34rpx; height: 34rpx; border-radius: 50%; border: 2rpx solid rgba(255,255,255,.35); display: flex; align-items: center; justify-content: center; font-size: 22rpx; color: rgba(255,255,255,.6); }
+.stat-row { display: flex; margin-top: 20rpx; }
+.stat-box { flex: 1; margin-right: 14rpx; background: #FBEAF0; border-radius: 20rpx; padding: 20rpx 8rpx; display: flex; flex-direction: column; align-items: center; box-shadow: 0 6rpx 0 #F3C7D6; }
+.stat-box:last-child { margin-right: 0; }
+.stat-label { font-size: 20rpx; color: #993556; }
+.stat-val { margin-top: 6rpx; font-size: 32rpx; font-weight: 800; color: #993556; }
+.boss-entry { margin-top: 28rpx; width: 100%; font-size: 32rpx; padding: 26rpx 0; white-space: nowrap; background: linear-gradient(135deg, #9B6BF0, #E5547A); }
+.empty-tip { margin-top: 100rpx; display: flex; flex-direction: column; align-items: center; }
+.empty-emoji { font-size: 100rpx; }
+.empty-text { margin-top: 20rpx; font-size: 34rpx; font-weight: 700; color: #5B5680; }
+.empty-sub { margin-top: 12rpx; font-size: 24rpx; color: #9A96B8; }
+.word-list { margin-top: 24rpx; }
+.word-item { background: #FFF; border-radius: 22rpx; padding: 24rpx; margin-bottom: 16rpx; display: flex; box-shadow: 0 6rpx 0 #F3C7D6, 0 10rpx 24rpx rgba(229,84,122,.08); }
+.word-main { flex: 1; display: flex; flex-direction: column; }
+.word-title-row { display: flex; align-items: center; }
+.word-title-row .speak-btn { width: 48rpx; height: 48rpx; font-size: 26rpx; margin-left: 12rpx; }
+.word-name { font-size: 32rpx; font-weight: 800; color: #2B2456; }
+.word-phonetic { margin-top: 4rpx; font-size: 22rpx; color: #7B6BF0; }
+.word-mean { margin-top: 8rpx; font-size: 24rpx; color: #6B6788; line-height: 1.5; }
+.word-side { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; margin-left: 16rpx; }
+.wrong-times { font-size: 22rpx; color: #E5547A; background: #FFF0F3; padding: 6rpx 14rpx; border-radius: 999rpx; }
+.remove-btn { font-size: 22rpx; color: #38B6A0; }
+/* 底部装饰：叉号 + 对勾 + 感叹号（粉红系，不拦截点击） */
+.foot-deco { position: absolute; left: 0; right: 0; bottom: 0; height: 120rpx; z-index: 0; pointer-events: none; overflow: hidden; }
+.wr-cross { position: absolute; font-size: 52rpx; font-weight: 800; color: rgba(229,84,122,.22); }
+.wr-x1 { left: 14%; bottom: 26rpx; transform: rotate(-12deg); } .wr-x2 { right: 16%; bottom: 32rpx; transform: rotate(14deg); }
+.wr-check { position: absolute; left: 50%; bottom: 24rpx; font-size: 56rpx; font-weight: 800; color: rgba(56,182,160,.35); }
+.wr-bang { position: absolute; right: 32%; bottom: 68rpx; width: 32rpx; height: 32rpx; border-radius: 50%; border: 2rpx solid rgba(229,84,122,.3); display: flex; align-items: center; justify-content: center; font-size: 20rpx; font-weight: 800; color: rgba(229,84,122,.45); }
+
+/* 星际词卡（复用打地鼠同款弹层） */
+.wc-open { margin: 6rpx; width: fit-content; max-width: 100%; text-align: center; font-size: 24rpx; font-weight: 700; color: #3D5A88; background: #FFFFFF; border: 2rpx solid #B9CDE8; border-radius: 999rpx; padding: 12rpx 28rpx; box-shadow: 0 5rpx 0 #D4E0F0; }
+/* 星际词卡弹层 */
+.wc-mask { position: fixed; left: 0; top: 0; right: 0; bottom: 0; z-index: 999; background: rgba(3,8,26,.82); display: flex; align-items: center; justify-content: center; padding: 30rpx; box-sizing: border-box; }
+.wc-card { position: relative; width: 100%; max-height: 88vh; overflow-y: auto; box-sizing: border-box; padding: 46rpx 32rpx 32rpx; border-radius: 42rpx; border: 5rpx solid #F0932B; background: radial-gradient(circle at 16% 12%, rgba(255,255,255,.9) 0 2rpx, transparent 3rpx), radial-gradient(circle at 82% 18%, rgba(255,255,255,.8) 0 2rpx, transparent 3rpx), radial-gradient(circle at 26% 56%, rgba(255,255,255,.7) 0 2rpx, transparent 3rpx), radial-gradient(circle at 76% 72%, rgba(255,255,255,.8) 0 2rpx, transparent 3rpx), linear-gradient(180deg, #162653 0%, #0C1638 100%); box-shadow: 0 20rpx 60rpx rgba(0,0,0,.6), inset 0 0 0 3rpx rgba(245,206,106,.18); }
+.wc-close { position: absolute; right: 24rpx; top: 20rpx; width: 52rpx; height: 52rpx; border-radius: 50%; background: rgba(255,255,255,.12); color: #DCE6FF; font-size: 28rpx; display: flex; align-items: center; justify-content: center; z-index: 2; }
+.wc-planet { position: absolute; pointer-events: none; opacity: .9; }
+.wc-planet-a { left: -10rpx; top: 12rpx; font-size: 66rpx; transform: rotate(-18deg); }
+.wc-planet-b { right: 18rpx; top: 130rpx; font-size: 42rpx; }
+.wc-title { text-align: center; font-size: 28rpx; font-weight: 800; color: #F5CE6A; letter-spacing: 4rpx; }
+.wc-word { margin-top: 18rpx; text-align: center; font-size: 64rpx; font-weight: 900; color: #F5A73A; line-height: 1.1; word-break: break-word; text-shadow: 3rpx 3rpx 0 #8A4A12, 0 0 28rpx rgba(245,167,58,.35); }
+.wc-phonetic { margin-top: 12rpx; text-align: center; font-size: 28rpx; color: #CFE0FF; }
+.wc-section { margin-top: 26rpx; background: rgba(255,255,255,.07); border: 2rpx solid rgba(255,255,255,.16); border-radius: 24rpx; padding: 22rpx 24rpx; }
+.wc-section-title { font-size: 26rpx; font-weight: 800; color: #F5CE6A; margin-bottom: 14rpx; }
+.wc-cn { font-size: 27rpx; line-height: 1.6; color: #FFF3D0; font-weight: 700; }
+.wc-en { margin-top: 10rpx; font-size: 23rpx; line-height: 1.6; color: #C6CFEE; }
+.wc-coll { display: flex; align-items: flex-start; margin-bottom: 14rpx; }
+.wc-coll:last-child { margin-bottom: 0; }
+.wc-coll-i { font-size: 23rpx; font-weight: 800; color: #FFD98A; margin-right: 14rpx; padding-top: 4rpx; }
+.wc-coll-body { flex: 1; }
+.wc-coll-en { font-size: 25rpx; color: #FFF6E6; font-weight: 700; line-height: 1.4; }
+.wc-coll-cn { margin-top: 4rpx; font-size: 22rpx; color: #B8C4E8; }
+.wc-syns { display: flex; flex-wrap: wrap; }
+.wc-syn { font-size: 23rpx; color: #D9B8FF; background: rgba(176,107,224,.2); border: 2rpx solid rgba(176,107,224,.45); border-radius: 999rpx; padding: 8rpx 20rpx; margin: 6rpx; }
+.wc-source { margin-top: 18rpx; text-align: center; font-size: 18rpx; color: #8090BF; line-height: 1.5; }
+.wc-actions { display: flex; margin-top: 26rpx; }
+.wc-btn { flex: 1; margin: 0 8rpx; padding: 18rpx 10rpx; border: none; border-radius: 999rpx; font-size: 26rpx; font-weight: 800; color: #fff; background: linear-gradient(180deg, #FFB347, #F08A22); box-shadow: 0 6rpx 0 #B85E12; }
+.wc-btn.ghost { color: #F5CE6A; background: rgba(255,255,255,.1); box-shadow: 0 6rpx 0 rgba(0,0,0,.3); }
+.wc-btn::after { border: none; }
+/* 词条上的小「词卡」胶囊：跟朗读并排，不挤词名 */
+.wc-open-sm { margin: 0 0 0 12rpx; padding: 6rpx 16rpx; font-size: 20rpx; font-weight: 700; white-space: nowrap; box-shadow: 0 3rpx 0 #D4E0F0; }
