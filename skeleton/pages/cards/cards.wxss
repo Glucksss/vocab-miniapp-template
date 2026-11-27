@@ -1,0 +1,87 @@
+.page { box-sizing: border-box; min-height: 100vh; padding: 28rpx 28rpx 60rpx; }
+.hero { display: flex; align-items: center; background: linear-gradient(135deg, #9B6BF0, #6C4BD6); border-radius: 28rpx; padding: 30rpx; color: #FFF; box-shadow: 0 10rpx 30rpx rgba(108,75,214,0.3); }
+.hero-emoji { font-size: 64rpx; }
+.hero-text { margin-left: 20rpx; display: flex; flex-direction: column; }
+.hero-title { font-size: 36rpx; font-weight: 800; }
+.hero-desc { margin-top: 6rpx; font-size: 22rpx; opacity: 0.9; }
+
+.tabs { display: flex; margin-top: 26rpx; background: #EFECFF; border-radius: 999rpx; padding: 6rpx; }
+.tab { flex: 1; text-align: center; padding: 18rpx 0; border-radius: 999rpx; font-size: 26rpx; font-weight: 700; color: #8A86A8; }
+.tab-on { background: #FFF; color: #5B4BD6; box-shadow: 0 4rpx 12rpx rgba(91,75,214,0.12); }
+
+.draw-zone { margin-top: 40rpx; display: flex; justify-content: center; }
+.mystery-card {
+  width: 400rpx; height: 480rpx; border-radius: 32rpx;
+  background: linear-gradient(160deg, #7B6BF0, #4B3BB8);
+  box-shadow: 0 20rpx 50rpx rgba(91,75,214,0.35), inset 0 0 0 4rpx rgba(255,255,255,0.2);
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  color: #FFF;
+}
+.mystery-icon { font-size: 140rpx; }
+.mystery-title { margin-top: 24rpx; font-size: 36rpx; font-weight: 800; letter-spacing: 4rpx; }
+.mystery-sub { margin-top: 14rpx; font-size: 22rpx; opacity: 0.85; }
+.mystery-sub.used { opacity: 0.6; }
+
+.draw-btn { margin-top: 36rpx; width: 100%; font-size: 32rpx; height: 96rpx; display: flex; align-items: center; justify-content: center; padding: 0; line-height: normal; }
+.more-row { display: flex; margin-top: 20rpx; }
+.draw-more { flex: 1; margin-right: 14rpx; font-size: 26rpx; height: 80rpx; font-weight: 700; display: flex; align-items: center; justify-content: center; padding: 0; line-height: normal; }
+.draw-more:last-child { margin-right: 0; }
+/* 清掉小程序 button 默认 ::after 边框，避免撑开影响居中 */
+.draw-btn::after, .draw-more::after, .energy-draw-btn::after, .result-btn::after { border: none; }
+.ad-more { background: #FFF3E0; color: #D68910; }
+.freeze-more { background: #E8F6FF; color: #2E86C1; }
+
+.rarity-guide { margin-top: 36rpx; background: #FFF; border-radius: 24rpx; padding: 26rpx; }
+.guide-title { font-size: 26rpx; font-weight: 700; color: #2B2456; }
+.guide-row { display: flex; align-items: center; margin-top: 18rpx; }
+.g-icon { font-size: 30rpx; width: 50rpx; }
+.g-name { flex: 1; font-size: 24rpx; color: #5B5680; }
+.g-rate { font-size: 22rpx; color: #9A96B8; }
+.guide-note { display: block; margin-top: 20rpx; font-size: 20rpx; color: #B0ACCA; }
+
+.stat-mini { display: flex; justify-content: space-between; margin-top: 24rpx; font-size: 22rpx; color: #8A86A8; }
+.epic-count { color: #9B6BF0; font-weight: 700; }
+.rare-count { color: #2E86C1; font-weight: 700; }
+
+.empty { margin-top: 100rpx; display: flex; flex-direction: column; align-items: center; }
+.empty-emoji { font-size: 96rpx; }
+.empty-text { margin-top: 20rpx; font-size: 32rpx; font-weight: 700; color: #5B5680; }
+.empty-sub { margin-top: 12rpx; font-size: 22rpx; color: #9A96B8; }
+
+.card-grid { display: flex; flex-wrap: wrap; margin-top: 24rpx; }
+.word-card {
+  width: 31.5%; margin-right: 2.35%; margin-bottom: 18rpx; box-sizing: border-box;
+  border-radius: 20rpx; padding: 20rpx 14rpx; min-height: 200rpx;
+  display: flex; flex-direction: column;
+}
+.word-card:nth-child(3n) { margin-right: 0; }
+.card-common { background: #F7F6FC; border: 3rpx solid #E3E0F0; }
+.card-rare { background: #EAF5FF; border: 3rpx solid #7EC0EE; box-shadow: 0 6rpx 18rpx rgba(126,192,238,0.25); }
+.card-epic { background: linear-gradient(160deg, #F3E9FF, #E6D4FF); border: 3rpx solid #B88AEF; box-shadow: 0 6rpx 22rpx rgba(184,138,239,0.3); }
+.card-top { display: flex; justify-content: space-between; align-items: center; }
+.card-rarity { font-size: 18rpx; font-weight: 700; color: #6C4BD6; }
+.card-date { font-size: 16rpx; color: #B0ACCA; }
+.card-word { margin-top: 16rpx; font-size: 26rpx; font-weight: 800; color: #2B2456; word-break: break-all; }
+.card-phonetic { margin-top: 4rpx; font-size: 17rpx; color: #7B6BF0; }
+.card-mean { margin-top: 8rpx; font-size: 18rpx; color: #8A86A8; line-height: 1.4; }
+
+.overlay { position: fixed; left: 0; top: 0; right: 0; bottom: 0; background: rgba(43,36,86,0.6); display: flex; align-items: center; justify-content: center; z-index: 99; }
+.result-card { width: 620rpx; background: #FFF; border-radius: 36rpx; padding: 44rpx 34rpx; display: flex; flex-direction: column; align-items: center; }
+.draw-emoji { font-size: 90rpx; }
+.draw-rarity { margin-top: 8rpx; font-size: 32rpx; font-weight: 800; }
+.draw-rarity.common { color: #8A86A8; }
+.draw-rarity.rare { color: #2E86C1; }
+.draw-rarity.epic { color: #9B6BF0; }
+.card-show { margin-top: 24rpx; width: 100%; border-radius: 24rpx; padding: 30rpx; display: flex; flex-direction: column; align-items: center; }
+.card-show .card-word { font-size: 40rpx; margin-top: 0; }
+.card-show .card-phonetic { font-size: 22rpx; }
+.card-show .card-mean { font-size: 24rpx; margin-top: 12rpx; text-align: center; }
+.result-btn { margin-top: 32rpx; width: 100%; font-size: 30rpx; height: 88rpx; display: flex; align-items: center; justify-content: center; padding: 0; line-height: normal; }
+
+.energy-draw { margin-top: 24rpx; background: linear-gradient(135deg, #FFF6E5, #FFE9C7); border-radius: 22rpx; padding: 24rpx 26rpx; }
+.energy-draw-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16rpx; }
+.ed-title { font-size: 26rpx; font-weight: 700; color: #A8631B; }
+.ed-balance { font-size: 22rpx; color: #B08038; }
+.energy-draw-btn { background: linear-gradient(135deg, #F5A623, #E8871A); color: #fff; font-size: 28rpx; font-weight: 700; border: none; border-radius: 40rpx; height: 80rpx; width: 100%; display: flex; align-items: center; justify-content: center; padding: 0; line-height: normal; }
+.ed-disabled { background: #E8D9BE; color: #A99878; }
+.ed-tip { display: block; text-align: center; font-size: 20rpx; color: #B99560; margin-top: 12rpx; }
